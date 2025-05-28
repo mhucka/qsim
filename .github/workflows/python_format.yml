@@ -84,6 +84,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - run: echo ${{ github.event_name }}
+      - if: github.event_name == 'workflow_dispatch'
+        run: echo 1
+      - if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo 2
 
 
   check-format:
