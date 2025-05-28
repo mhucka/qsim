@@ -35,11 +35,10 @@ on:
         type: boolean
         default: true
 
-# Declare default workflow permissions to be read-only.
 permissions: read-all
 
-# Cancel any previously-started but still active runs on the same branch.
 concurrency:
+  # Cancel any previously-started but still active runs on the same branch.
   cancel-in-progress: true
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
@@ -63,8 +62,11 @@ jobs:
       run: >-
         ${{github.event_name == 'merge_queue' || steps.changes.outputs.python}}
     steps:
-      - uses: actions/checkout@4
-      - uses: dorny/paths-filter@v3
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@v4
+
+      - name: Determine files changed by this ${{github.event_name}} event
+        uses: dorny/paths-filter@v3
         id: changes
         with:
           base: ${{github.ref_name}}
@@ -84,14 +86,19 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@v4
         with:
+          # Need the full git history for format-incremental.
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python with caching of pip dependencies
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           architecture: 'x64'
+          cache: pip
+          cache-dependency-path: dev-requirements.txt
 
       - name: Install dev requirements
         run: pip install -r dev-requirements.txt

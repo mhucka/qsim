@@ -19,14 +19,12 @@ on:
   schedule:
     - cron: "10 7 * * *"
 
-  # Allow manual invocation, for testing.
   workflow_dispatch:
 
-# Declare default workflow permissions to be read-only.
 permissions: read-all
 
-# Cancel any previously-started but still active runs on the same branch.
 concurrency:
+  # Cancel any previously-started but still active runs on the same branch.
   cancel-in-progress: true
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 

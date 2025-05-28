@@ -21,7 +21,6 @@ on:
       - master
       - main
 
-  # Build wheels for any PRs.
   pull_request:
     types: [opened, synchronize]
 
@@ -29,7 +28,6 @@ on:
     types:
       - checks_requested
 
-  # Allow manual invocation, for testing.
   workflow_dispatch:
     inputs:
       trace:
@@ -37,11 +35,10 @@ on:
         type: boolean
         default: true
 
-# Declare default workflow permissions to be read-only.
 permissions: read-all
 
-# Cancel any previously-started but still active runs on the same branch.
 concurrency:
+  # Cancel any previously-started but still active runs on the same branch.
   cancel-in-progress: true
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
@@ -85,11 +82,13 @@ jobs:
           # {os: windows-2019, wh: win, arch: AMD64, pyarch: x64, py: 13},
         ]
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python with caching of pip dependencies
+        uses: actions/setup-python@v5
         id: setup
         with:
           python-version: '3.${{matrix.conf.py}}'
@@ -97,7 +96,8 @@ jobs:
           cache: pip
           cache-dependency-path: requirements.txt
 
-      - uses: bazel-contrib/setup-bazel@0.15.0
+      - name: Set up Bazel with caching
+        uses: bazel-contrib/setup-bazel@0.15.0
         with:
           disk-cache: ${{github.workflow}}
           bazelisk-cache: true
@@ -110,15 +110,18 @@ jobs:
             common --remote_upload_local_results=false
             common --jobs 2
 
-      - run: python -m pip install -r requirements.txt
+      - name: Install qsim dependencies
+        run: pip install -r requirements.txt
 
       - if: matrix.conf.os != 'windows-2019'
+        name: Run the build and test script (Windows case)
         env:
           # SHELLOPTS is used by Bash. Add xtrace when doing manual debug runs.
           SHELLOPTS: ${{inputs.trace && 'xtrace' || '' }}
         run: dev_tools/test_libs.sh
 
       - if: matrix.conf.os == 'windows-2019'
+        name: Run the build and test script (non-Windows)
         env:
           pyroot: 'C:\\hostedtoolcache\\windows\\Python'
           pyexe: '${{steps.setup.outputs.python-version}}\\${{matrix.conf.pyarch}}\\python3.exe'
@@ -128,6 +131,7 @@ jobs:
           bash dev_tools/test_libs.sh --action_env PYTHON_BIN_PATH=${{env.pyroot}}\\${{env.pyexe}}
 
       - if: startsWith(matrix.conf.os, 'macos')
+        name: Set cibuildwheel MACOSX_DEPLOYMENT_TARGET value on MacOS
         run: |
           set -x
           os=${{matrix.conf.os}}
