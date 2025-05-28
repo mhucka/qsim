@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI test – Cirq compatibility (nightly)
+name: CI test – Cirq compat. (nightly)
 run-name: Nightly compatibility test against latest Cirq dev release
 
 on:

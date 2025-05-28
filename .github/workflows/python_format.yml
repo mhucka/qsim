@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: CI test – Python code format
-run-name: Check formatting of Python code
+run-name: Check formatting of changed Python files
 
 on:
   push:
@@ -43,16 +43,15 @@ concurrency:
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
 jobs:
-  # GitHub Actions can have path filters (i.e., the use of a "paths:" keyword
-  # on the trigger definitions in the "on:" block earlier in this file). Path
-  # filters *would* be the natural way to make workflows trigger only when the
-  # desired files are affected by a pull request – except that the way branch
-  # protection rules work today is: "If a workflow is skipped due to path
-  # filtering [...] then checks associated with that workflow will remain in a
-  # Pending state. A pull request that requires those checks to be successful
-  # will be blocked from merging." The approach taken forgoes the use of path
-  # filters in the trigger conditions and instead checks for changes directly.
-
+  # For efficiency, we skip this workflow if there were no Python file changes.
+  # Here's an explanation of the approach used. GitHub Actions workflows can
+  # have path filters (i.e., the use of "paths:" keywords on event triggers),
+  # and that *would* be the natural way to run workflows only when the relevant
+  # files change – except that the way GitHub branch protection rules work is:
+  # "If a workflow is skipped due to path filtering [...] the checks associated
+  # with that workflow will remain in a Pending state. A PR that requires those
+  # checks to be successful will be blocked from merging." Our approach forgoes
+  # path filters, and instead checks file changes using a preliminary job.
   decide:
     name: (Decide if format check is needed)
     runs-on: ubuntu-24.04
