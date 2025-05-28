@@ -3,8 +3,7 @@ FROM debian
 
 # Install requirements
 RUN apt-get update
-RUN apt-get install -y python3-dev python3-pip python3-venv
-RUN apt-get install -y cmake git
+RUN apt-get install -y python3-dev python3-pip python3-venv git
 
 # Create venv to avoid collision between system packages (e.g. numpy) and Cirq's deps.
 RUN python3 -m venv test_env
