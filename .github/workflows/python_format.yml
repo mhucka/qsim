@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI check Python code format
+name: CI test – Python code format
 run-name: Check formatting of Python code
 
 on:
@@ -53,9 +53,8 @@ jobs:
   # will be blocked from merging." The approach taken forgoes the use of path
   # filters in the trigger conditions and instead checks for changes directly.
 
-  decision:
-    # We always want to run when invoked manually, so no need to check changes.
-    name: (Decide if need run)
+  decide:
+    name: (Decide if format check is needed)
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
@@ -82,9 +81,9 @@ jobs:
               - .github/workflows/python_format.yml
 
   check-format:
-    if: needs.decision.outputs.proceed
+    if: needs.decide.outputs.proceed
     name: Python format check
-    needs: decision
+    needs: decide
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

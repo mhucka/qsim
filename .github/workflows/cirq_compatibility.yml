@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI nightly Cirq compatibility test
-run-name: Nightly test against latest Cirq dev release
+name: CI test – Cirq compatibility (nightly)
+run-name: Nightly compatibility test against latest Cirq dev release
 
 on:
   schedule:
@@ -54,7 +54,8 @@ jobs:
 
       - name: Install qsim dev requirements
         run: |
-          pip3 install -r requirements.txt dev-requirements.txt
+          pip3 install -r requirements.txt
+          pip3 install -r dev-requirements.txt
 
       - name: Run Python tests
         run: make -j run-py-tests
