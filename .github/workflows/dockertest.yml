@@ -77,7 +77,6 @@ jobs:
               - '!docs/**'
               - '!CITATION.cff'
 
-  # Run tests.
   build-and-test:
     if: needs.decide.outputs.proceed
     name: Build and test Docker images
@@ -85,13 +84,15 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
+      # The next environment variable is used by Docker.
       BUILDKIT_PROGRESS: ${{inputs.trace && 'plain' || ''}}
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Checkout submodules
+      - name: Check out git submodules
         run: git submodule update --init --recursive
 
       - name: Build Docker images
