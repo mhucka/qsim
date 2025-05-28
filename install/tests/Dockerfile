@@ -22,7 +22,7 @@ FROM ubuntu:24.04
 
 # Update package list & install some basic tools we'll need.
 RUN apt-get update
-RUN apt-get install -y python3-dev python3-pip python3-venv wget git
+RUN apt-get install -y python3-dev python3-pip python3-venv wget
 
 # The default version of CMake is 3.28. Get a newer version from Kitware.
 RUN apt remove --purge --auto-remove cmake

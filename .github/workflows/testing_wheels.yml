@@ -23,6 +23,11 @@ on:
 
   # Build wheels for any PRs.
   pull_request:
+    types: [opened, synchronize]
+
+  merge_group:
+    types:
+      - checks_requested
 
   # Allow manual invocation, for testing.
   workflow_dispatch:
@@ -32,13 +37,13 @@ on:
         type: boolean
         default: true
 
+# Declare default workflow permissions to be read-only.
+permissions: read-all
+
 # Cancel any previously-started but still active runs on the same branch.
 concurrency:
   cancel-in-progress: true
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
-
-# Declare default workflow permissions to be read-only.
-permissions: read-all
 
 jobs:
   build_wheels:

@@ -18,20 +18,16 @@ run-name: Check formatting of Python code
 on:
   push:
     branches:
-      # Only check pushes to the main branch.
       - master
       - main
-    paths:
-      # Only check formatting when python files are changed.
-      - '**/*.py'
 
   pull_request:
-    # Check PRs for all branches.
-    paths:
-      # Only check formatting when python files are changed.
-      - '**/*.py'
+    types: [opened, synchronize]
 
-  # Allow manual invocation, for testing.
+  merge_group:
+    types:
+      - checks_requested
+
   workflow_dispatch:
     inputs:
       trace:
@@ -39,18 +35,54 @@ on:
         type: boolean
         default: true
 
+# Declare default workflow permissions to be read-only.
+permissions: read-all
+
 # Cancel any previously-started but still active runs on the same branch.
 concurrency:
   cancel-in-progress: true
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
-# Declare default workflow permissions to be read-only.
-permissions: read-all
-
 jobs:
-  format:
-    name: Python format check
+  # GitHub Actions can have path filters (i.e., the use of a "paths:" keyword
+  # on the trigger definitions in the "on:" block earlier in this file). Path
+  # filters *would* be the natural way to make workflows trigger only when the
+  # desired files are affected by a pull request – except that the way branch
+  # protection rules work today is: "If a workflow is skipped due to path
+  # filtering [...] then checks associated with that workflow will remain in a
+  # Pending state. A pull request that requires those checks to be successful
+  # will be blocked from merging." The approach taken forgoes the use of path
+  # filters in the trigger conditions and instead checks for changes directly.
+
+  decision:
+    # We always want to run when invoked manually, so no need to check changes.
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      run: >-
+        ${{github.event_name == 'merge_queue' || steps.changes.outputs.python}}
+    steps:
+      - uses: actions/checkout@4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          base: ${{github.ref_name}}
+          # Check for changes in Python files as well as the requirements file
+          # (in case the required version of pylint has changed) and this
+          # workflow (in case test options or something else changed).
+          filters: |
+            python:
+              - '**/*.py'
+              - dev-requirements.txt
+              - .github/workflows/python_format.yml
+
+  check-format:
+    if: github.event_name == 'workflow_dispatch' || needs.decision.outputs.run
+    name: Python format check
+    needs: decision
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:

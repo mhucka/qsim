@@ -22,13 +22,13 @@ on:
   # Allow manual invocation, for testing.
   workflow_dispatch:
 
+# Declare default workflow permissions to be read-only.
+permissions: read-all
+
 # Cancel any previously-started but still active runs on the same branch.
 concurrency:
   cancel-in-progress: true
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
-
-# Declare default workflow permissions to be read-only.
-permissions: read-all
 
 jobs:
   test-compatibility:
@@ -36,18 +36,27 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python with caching of pip dependencies
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           architecture: 'x64'
           cache: pip
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            dev-requirements.txt
 
-      - run: pip3 install --upgrade cirq~=1.0.dev
-      - run: pip3 install -r requirements.txt
-      - run: pip3 install -r dev-requirements.txt
-      - run: make -j run-py-tests
+      - name: Install latest dev version of Cirq
+        run: pip3 install --upgrade cirq~=1.0.dev
+
+      - name: Install qsim dev requirements
+        run: |
+          pip3 install -r requirements.txt dev-requirements.txt
+
+      - name: Run Python tests
+        run: make -j run-py-tests

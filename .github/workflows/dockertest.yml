@@ -17,32 +17,41 @@ run-name: Build Docker images and test them
 
 on:
   push:
-    # Run post-submit tests when pushing to main.
     branches:
       - master
       - main
 
-  # Build and test for all PRs.
   pull_request:
+    types: [opened, synchronize]
+
+  merge_group:
+    types:
+      - checks_requested
 
   # Allow manual invocation, for testing.
   workflow_dispatch:
+    inputs:
+      trace:
+        description: 'Trace Docker build output'
+        type: boolean
+        default: true
+
+# Declare default workflow permissions to be read-only.
+permissions: read-all
 
 # Cancel any previously-started but still active runs on the same branch.
 concurrency:
   cancel-in-progress: true
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
-# Declare default workflow permissions to be read-only.
-permissions: read-all
-
 jobs:
   # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-  docker-build-and-test:
+  build-and-test:
     name: Build and test Docker images
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      BUILDKIT_PROGRESS: ${{inputs.trace && 'plain' || ''}}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,10 +69,10 @@ jobs:
       - name: Run Python tests
         run: docker run --rm qsim-py-tests:latest
 
-      - name: Run sample simulation
+      - name: Run a sample simulation
         run: docker run --rm qsim:latest -c /qsim/circuits/circuit_q24
 
       - name: Test installation process
         run: |
           cd install/tests
-          docker compose up --build
+          docker compose build
