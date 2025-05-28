@@ -11,7 +11,7 @@ RUN python3 -m venv test_env
 ENV PATH="test_env/bin:$PATH"
 
 # Install qsim requirements
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r ./requirements.txt
 
 # Copy relevant files
 COPY ./pybind_interface/ /qsim/pybind_interface/
