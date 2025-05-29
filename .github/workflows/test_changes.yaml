@@ -1,0 +1,73 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Explanation for why file changes are tested using this workflow
+#
+# GitHub Actions workflows can have path filters (i.e., the use of "paths:"
+# keywords on event triggers in the "on:" block of a workflow). That *would* be
+# the natural way to run workflows only when the relevant files are changed in
+# a PR – except that the way GitHub branch protection rules work is: "If a
+# workflow is skipped due to path filtering [...] the checks associated with
+# that workflow will remain in a Pending state. A PR that requires those checks
+# to be successful will be blocked from merging." Blocking merges is not
+# acceptable. Surprisingly, GitHub doesn't provide an alternative. So, we forgo
+# path filters, and instead check file changes using this small workflow.
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+name: Test changed files
+run-name: Test which files have been changed
+
+on:
+  workflow_call:
+    outputs:
+      noncode:
+        description: 'True if only noncode files were changed'
+        value: ${{jobs.test-changes.outputs.noncode}}
+      python:
+        description: 'True if Python files were changed'
+        value: ${{jobs.test-changes.outputs.python}}
+
+permissions: read-all
+
+jobs:
+  test-changes:
+    name: Test files changed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      noncode: steps.changes.outputs.noncode
+      python: steps.changes.outputs.python
+    steps:
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@v4
+
+      - name: Determine files changed by this ${{github.event_name}} event
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          base: ${{github.ref_name}}
+          filters: |
+            noncode:
+              - '**/*.md'
+              - 'docs/**'
+              - '.github/ISSUE_TEMPLATE/**'
+              - 'CITATION.cff'
+            # Check for changes in Python files as well as the requirements
+            # file (in case the required version of pylint has changed) and
+            # this workflow (in case we change this test).
+            python:
+              - '**/*.py'
+              - dev-requirements.txt
+              - .github/workflows/test-changes.yaml
