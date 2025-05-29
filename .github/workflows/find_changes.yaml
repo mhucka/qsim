@@ -34,40 +34,48 @@ on:
     outputs:
       noncode:
         description: 'True if only noncode files were changed'
-        value: ${{jobs.test-changes.outputs.noncode}}
+        value: ${{jobs.test.outputs.have-noncode-changes}}
       python:
         description: 'True if Python files were changed'
-        value: ${{jobs.test-changes.outputs.python}}
+        value: ${{jobs.test.outputs.have-python-changes}}
 
 permissions: read-all
 
 jobs:
-  test-changes:
+  test:
     name: Test files changed
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
-      noncode: steps.changes.outputs.noncode
-      python: steps.changes.outputs.python
+      have-noncode-changes: steps.test-noncode-files.outputs.matched
+      have-python-changes: steps.test-python-files.outputs.matched
     steps:
       - name: Check out a copy of the git repository
         uses: actions/checkout@v4
 
-      - name: Determine files changed by this ${{github.event_name}} event
+      - name: Test whether ONLY doc and similar files
         uses: dorny/paths-filter@v3
-        id: changes
+        id: test-noncode-files
+        with:
+          base: ${{github.ref_name}}
+          predicate-quantifier: 'every'
+          filters: |
+            matched:
+              - '!**/*.md'
+              - '!docs/**'
+              - '!.github/ISSUE_TEMPLATE/**'
+              - '!CITATION.cff'
+
+      - name: Test whether Python files were changed
+        uses: dorny/paths-filter@v3
+        id: test-python-files
         with:
           base: ${{github.ref_name}}
           filters: |
-            noncode:
-              - '**/*.md'
-              - 'docs/**'
-              - '.github/ISSUE_TEMPLATE/**'
-              - 'CITATION.cff'
             # Check for changes in Python files as well as the requirements
             # file (in case the required version of pylint has changed) and
             # this workflow (in case we change this test).
-            python:
+            matched:
               - '**/*.py'
               - dev-requirements.txt
               - .github/workflows/test-changes.yaml
