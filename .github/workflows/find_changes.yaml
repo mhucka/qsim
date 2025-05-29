@@ -26,18 +26,18 @@
 # path filters, and instead check file changes using this small workflow.
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-name: Test changed files
+name: Test file changes
 run-name: Test which files have been changed
 
 on:
   workflow_call:
     outputs:
-      noncode:
-        description: 'True if only noncode files were changed'
-        value: ${{jobs.test.outputs.have-noncode-changes}}
+      code:
+        description: 'True if any code files were changed'
+        value: jobs.test.outputs.only-noncode-changes == 'false'
       python:
         description: 'True if Python files were changed'
-        value: ${{jobs.test.outputs.have-python-changes}}
+        value: jobs.test.outputs.have-python-changes
 
 permissions: read-all
 
@@ -47,15 +47,15 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
-      have-noncode-changes: steps.test-noncode-files.outputs.matched
-      have-python-changes: steps.test-python-files.outputs.matched
+      only-noncode-changes: steps.only-noncode-files.outputs.matched
+      python-changes: steps.python-files.outputs.matched
     steps:
       - name: Check out a copy of the git repository
         uses: actions/checkout@v4
 
       - name: Test whether ONLY doc and similar files
         uses: dorny/paths-filter@v3
-        id: test-noncode-files
+        id: only-noncode-files
         with:
           base: ${{github.ref_name}}
           predicate-quantifier: 'every'
@@ -68,7 +68,7 @@ jobs:
 
       - name: Test whether Python files were changed
         uses: dorny/paths-filter@v3
-        id: test-python-files
+        id: python-files
         with:
           base: ${{github.ref_name}}
           filters: |
