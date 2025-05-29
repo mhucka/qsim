@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI test – Python code format
-run-name: Check formatting of changed Python files
+name: 'CI: Python format tests'
+run-name: Check style and format of Python code
 
 on:
   push:

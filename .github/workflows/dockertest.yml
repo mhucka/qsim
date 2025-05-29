@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI test – Docker
+name: 'CI: build & test Docker images'
 run-name: Build Docker images and test them
 
 on:

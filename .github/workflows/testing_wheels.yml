@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI test – Python wheels
+name: 'CI: build & test Python wheels'
 run-name: Build Python wheels and test them
 
 on:
@@ -139,12 +139,6 @@ jobs:
           bazelisk-cache: true
           external-cache: true
           repository-cache: true
-          bazelrc: |
-            common --announce_rc
-            common --verbose_failures
-            common --auto_output_filter=none
-            common --remote_upload_local_results=false
-            common --jobs 2
 
       - name: Install qsim dependencies
         run: pip install -r requirements.txt
@@ -154,7 +148,7 @@ jobs:
         env:
           # SHELLOPTS is used by Bash. Add xtrace when doing manual debug runs.
           SHELLOPTS: ${{inputs.trace && 'xtrace' || '' }}
-        run: dev_tools/test_libs.sh
+        run: dev_tools/test_libs.sh --config=verbose
 
       - if: matrix.conf.os == 'windows-2019'
         name: Run the build and test script (non-Windows)
@@ -163,8 +157,9 @@ jobs:
           pyexe: '${{steps.setup.outputs.python-version}}\\${{matrix.conf.pyarch}}\\python3.exe'
           SHELLOPTS: ${{inputs.trace && 'xtrace' || '' }}
         shell: cmd
-        run: |
-          bash dev_tools/test_libs.sh --action_env PYTHON_BIN_PATH=${{env.pyroot}}\\${{env.pyexe}}
+        run: >-
+          bash dev_tools/test_libs.sh --config=verbose
+          --action_env PYTHON_BIN_PATH=${{env.pyroot}}\\${{env.pyexe}}
 
       - if: startsWith(matrix.conf.os, 'macos')
         name: Set cibuildwheel MACOSX_DEPLOYMENT_TARGET value on MacOS
