@@ -43,46 +43,18 @@ concurrency:
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
 jobs:
-  # For efficiency, we skip this workflow if the file changes only involve docs.
-  # Here's an explanation of the approach used. GitHub Actions workflows can
-  # have path filters (i.e., the use of "paths:" keywords on event triggers),
-  # and that *would* be the natural way to run workflows only when the relevant
-  # files change – except that the way GitHub branch protection rules work is:
-  # "If a workflow is skipped due to path filtering [...] the checks associated
-  # with that workflow will remain in a Pending state. A PR that requires those
-  # checks to be successful will be blocked from merging." Our approach forgoes
-  # path filters, and instead checks file changes using a preliminary job.
-  decide:
-    name: (Decide if wheel tests are needed)
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    outputs:
-      proceed: >-
-        github.event_name == 'workflow_dispatch' || steps.changes.outputs.notdocs
-    steps:
-      - if: github.event_name != 'workflow_dispatch'
-        name: Check out a copy of the git repository
-        uses: actions/checkout@v4
+  find-changes:
+    name: Determine file changes
+    uses: ./.github/workflows/find_changes.yaml
+    secrets: inherit
 
-      - if: github.event_name != 'workflow_dispatch'
-        name: Determine files changed by this ${{github.event_name}} event
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          base: ${{github.ref_name}}
-          predicate-quantifier: 'every'
-          filters: |
-            notdocs:
-              - '!**/*.md'
-              - '!docs/**'
-              - '!CITATION.cff'
-
-  build_wheels:
-    if: needs.decide.outputs.proceed
+  build-wheels:
+    # For efficiency, skip this workflow if there were no code file changes.
+    if: needs.find-changes.outputs.code || github.event_name == 'workflow_dispatch'
     name: >-
       Build wheel
       ${{matrix.conf.os}}/${{matrix.conf.pyarch}}/py3${{matrix.conf.py}}
-    needs: decide
+    needs: find-changes
     runs-on: ${{matrix.conf.os}}
     timeout-minutes: 20
     strategy:

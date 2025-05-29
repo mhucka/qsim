@@ -43,16 +43,16 @@ concurrency:
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
 jobs:
-  decide:
-    name: (Determine what changed)
-    uses: ./.github/workflows/test_changes.yaml
+  find-changes:
+    name: Determine file changes
+    uses: ./.github/workflows/find_changes.yaml
     secrets: inherit
 
   check-format:
     # For efficiency, skip this workflow if there were no Python file changes.
-    if: github.event_name == 'workflow_dispatch' || needs.decide.outputs.python
+    if: needs.find-changes.outputs.python || github.event_name == 'workflow_dispatch'
     name: Python format check
-    needs: decide
+    needs: find-changes
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
