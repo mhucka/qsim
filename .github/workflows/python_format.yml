@@ -43,48 +43,18 @@ concurrency:
   group: ${{github.workflow}}-${{github.event.pull_request.number||github.ref}}
 
 jobs:
-  # For efficiency, we skip this workflow if there were no Python file changes.
-  # Here's an explanation of the approach used. GitHub Actions workflows can
-  # have path filters (i.e., the use of "paths:" keywords on event triggers),
-  # and that *would* be the natural way to run workflows only when the relevant
-  # files change – except that the way GitHub branch protection rules work is:
-  # "If a workflow is skipped due to path filtering [...] the checks associated
-  # with that workflow will remain in a Pending state. A PR that requires those
-  # checks to be successful will be blocked from merging." Our approach forgoes
-  # path filters, and instead checks file changes using a preliminary job.
   decide:
-    name: (Decide if format check is needed)
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    outputs:
-      proceed: >-
-        github.event_name == 'workflow_dispatch' || steps.changes.outputs.python
-    steps:
-      - if: github.event_name != 'workflow_dispatch'
-        name: Check out a copy of the git repository
-        uses: actions/checkout@v4
-
-      - if: github.event_name != 'workflow_dispatch'
-        name: Determine files changed by this ${{github.event_name}} event
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          base: ${{github.ref_name}}
-          # Check for changes in Python files as well as the requirements file
-          # (in case the required version of pylint has changed) and this
-          # workflow (in case test options or something else changed).
-          filters: |
-            python:
-              - '**/*.py'
-              - dev-requirements.txt
-              - .github/workflows/python_format.yml
+    name: (Determine what changed)
+    uses: ./.github/workflows/test_changes.yaml
+    secrets: inherit
 
   check-format:
-    if: needs.decide.outputs.proceed
+    # For efficiency, skip this workflow if there were no Python file changes.
+    if: github.event_name == 'workflow_dispatch' || needs.decide.outputs.python
     name: Python format check
     needs: decide
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - name: Check out a copy of the git repository
         uses: actions/checkout@v4
