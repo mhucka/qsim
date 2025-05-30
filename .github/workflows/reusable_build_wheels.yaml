@@ -33,6 +33,10 @@ on:
         description: 'Upload wheels to GitHub'
         type: boolean
         default: false
+      verbose:
+        description: 'Turn on verbose output flags'
+        type: boolean
+        default: true
 
 permissions: read-all
 
@@ -97,6 +101,7 @@ jobs:
           # Note: additional cibuildwheel settings are in pyproject.toml.
           CIBW_ARCHS: ${{matrix.arch}}
           CIBW_BUILD: ${{matrix.build}}
+          CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 2 || ''}}
         run: |
           python -m pip install -r requirements.txt
           python -m pip install cibuildwheel==2.23.3 virtualenv==20.31.2 cmake

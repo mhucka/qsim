@@ -55,6 +55,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
+          submodules: recursive
 
       - name: Set up Bazel with caching
         uses: bazel-contrib/setup-bazel@8d2cb86a3680a820c3e219597279ce3f80d17a47 # 0.15.0
@@ -71,9 +72,6 @@ jobs:
           architecture: x64
           cache: pip
           cache-dependency-path: requirements.txt
-
-      - name: Check out git submodules
-        run: git submodule update --init --recursive
 
       - name: Install qsim requirements
         run: |

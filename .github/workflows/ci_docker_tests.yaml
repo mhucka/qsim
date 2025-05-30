@@ -63,9 +63,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-
-      - name: Check out git submodules
-        run: git submodule update --init --recursive
+          submodules: recursive
 
       - name: Build Docker images
         run: docker compose build
