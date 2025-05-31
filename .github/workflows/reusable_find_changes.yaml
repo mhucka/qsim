@@ -72,8 +72,5 @@ jobs:
         with:
           base: ${{github.ref_name}}
           filters: |
-            # Check for changes in Python files as well as requirements files.
             matched:
               - '**/*.py'
-              - requirements.txt
-              - dev-requirements.txt
