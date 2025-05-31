@@ -110,7 +110,7 @@ jobs:
           # Note: additional cibuildwheel settings are in pyproject.toml.
           CIBW_ARCHS: ${{matrix.arch}}
           CIBW_BUILD: ${{matrix.build}}
-          CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 2 || ''}}
+          CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 3 || ''}}
         run: |
           cibuildwheel --output-dir wheelhouse
 
