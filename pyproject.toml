@@ -17,7 +17,7 @@ skip = "*musllinux*"
 dependency-versions = "latest"
 # Due to package & module name conflict, temporarily move it away to run tests:
 test-extras = "dev"
-before-test = "mv {package}/qsimcirq /tmp"
+before-test = "mv {package}/qsimcirq /tmp && python -c 'import platform; print(platform.machine())'"
 test-command = "pytest -v {package}/qsimcirq_tests/qsimcirq_test.py && mv /tmp/qsimcirq {package}"
 
 [tool.cibuildwheel.macos]
