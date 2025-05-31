@@ -92,6 +92,12 @@ jobs:
             requirements.txt
             dev-requirements.txt
 
+      - name: Install Python requirements
+        run: |
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
+          pip install cibuildwheel==2.23.3 virtualenv==20.31.2
+
       - if: startsWith(matrix.os, 'macos')
         name: Set cibuildwheel MACOSX_DEPLOYMENT_TARGET value on MacOS
         run: |
@@ -106,7 +112,6 @@ jobs:
           CIBW_BUILD: ${{matrix.build}}
           CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 2 || ''}}
         run: |
-          pip install cibuildwheel==2.23.3 virtualenv==20.31.2
           cibuildwheel --output-dir wheelhouse
 
       - if: inputs.upload != false
