@@ -129,7 +129,9 @@ jobs:
           python-version: '3.${{matrix.conf.py}}'
           architecture: ${{matrix.conf.pyarch}}
           cache: pip
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            dev-requirements.txt
 
       - name: Set up Bazel with caching
         uses: bazel-contrib/setup-bazel@8d2cb86a3680a820c3e219597279ce3f80d17a47 # 0.15.0
@@ -139,8 +141,10 @@ jobs:
           external-cache: true
           repository-cache: true
 
-      - name: Install qsim dependencies
-        run: pip install -r requirements.txt
+      - name: Install qsim development dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
 
       - if: matrix.conf.os != 'windows-2022'
         name: Run the build and test script (non-Windows case)
