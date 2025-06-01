@@ -91,7 +91,7 @@ jobs:
 
       - name: Install Python requirements
         env:
-          PIP_NO_BINARY: 'pybind11'
+          PIP_NO_BINARY: 'pybind11[global]'
         run: |
           pip install -r requirements.txt
           pip install -r dev-requirements.txt
@@ -120,7 +120,7 @@ jobs:
           CLICOLOR: 0
           # new var I added to setup.py
           DEBUG: 1
-          PIP_NO_BINARY: 'pybind11'
+          PIP_NO_BINARY: 'pybind11[global]'
         run: |
           cibuildwheel --output-dir wheelhouse
 

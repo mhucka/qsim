@@ -5,6 +5,7 @@ FetchContent_Declare(
   pybind11
   GIT_REPOSITORY https://github.com/pybind/pybind11
   GIT_TAG "v${MIN_PYBIND_VERSION}"
+  OVERRIDE_FIND_PACKAGE
 )
 FetchContent_GetProperties(pybind11)
 find_package(pybind11 "${MIN_PYBIND_VERSION}" CONFIG)
