@@ -93,9 +93,9 @@ jobs:
 
       - name: Install Python requirements
         run: |
-          pip install -r requirements.txt
-          pip install -r dev-requirements.txt
-          pip install cibuildwheel==2.23.3 virtualenv==20.31.2
+          python -m pip install -r requirements.txt
+          python -m pip install -r dev-requirements.txt
+          python -m pip install cibuildwheel==2.23.3 virtualenv==20.31.2
 
       - if: startsWith(matrix.os, 'macos')
         name: Set cibuildwheel MACOSX_DEPLOYMENT_TARGET value on MacOS
@@ -112,7 +112,7 @@ jobs:
           # CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 3 || ''}}
           CIBW_BUILD_VERBOSITY: 3
         run: |
-          cibuildwheel --output-dir wheelhouse
+          python -m cibuildwheel --output-dir wheelhouse
 
       - if: inputs.upload != false
         name: Upload wheels to GitHub
