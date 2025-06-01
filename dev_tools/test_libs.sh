@@ -39,7 +39,7 @@ case "$(uname -s)" in
         features=$(grep -si flags /proc/cpuinfo)
         ;;
     windows*|cygwin*|mingw32*|msys*|mingw*)
-        features=$(wmic cpu get NumberOfLogicalProcessors)
+        features=$(python -c 'import cpuinfo; print(" ".join(cpuinfo.get_cpu_info()["flags"]))')
         ;;
     *)
         echo "Unsupported OS: $(uname -s)"
