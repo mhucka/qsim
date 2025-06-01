@@ -91,7 +91,7 @@ jobs:
 
       - name: Install Python requirements
         run: |
-          pip install -r requirements.txt
+          PIP_NO_BINARY=pybind pip install -r requirements.txt
           pip install -r dev-requirements.txt
           # TODO: try w/o virtualenv
           pip install cibuildwheel==2.23.3 virtualenv==20.31.2
@@ -118,10 +118,6 @@ jobs:
           CLICOLOR: 0
           # new var I added to setup.py
           DEBUG: 1
-          CMAKE_ARGS: >-
-            -DPYTHON_EXECUTABLE="{python_executable}"
-            -DPYTHON_INCLUDE_DIR="{python_include_dir}"
-            -DPYTHON_LIBRARY="{python_library}"
         run: |
           cibuildwheel --output-dir wheelhouse
 
