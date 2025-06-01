@@ -48,6 +48,10 @@ jobs:
     steps:
       - continue-on-error: true
         run: |
+          WMIC CPU Get DeviceID,NumberOfCores,NumberOfLogicalProcessors
+
+      - continue-on-error: true
+        run: |
           coreinfo64
 
       - continue-on-error: true
