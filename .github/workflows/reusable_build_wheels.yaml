@@ -91,7 +91,7 @@ jobs:
         with:
           # python-version: '3.12'
           # python-version: '>=3.10'
-          python-version: '3.10'
+          # python-version: '3.10'
           # architecture: ${{matrix.pyarch}}
           cache: pip
           cache-dependency-path: |
@@ -116,9 +116,9 @@ jobs:
           # Note: additional cibuildwheel settings are in pyproject.toml.
           CIBW_ARCHS: ${{matrix.arch}}
           # CIBW_BUILD: ${{matrix.build}}
-          CIBW_BUILD: 'cp310* cp311* cp312* cp313*'
+          # CIBW_BUILD: 'cp310* cp311* cp312* cp313*'
           # CIBW_BUILD: 'cp312*'
-          # CIBW_BUILD: 'cp310*'
+          CIBW_BUILD: 'cp310*'
           CIBW_SKIP: ${{matrix.skip}}
           # CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 2 || ''}}
           CIBW_BUILD_VERBOSITY: 1
