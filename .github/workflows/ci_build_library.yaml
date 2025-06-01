@@ -48,6 +48,10 @@ jobs:
     steps:
       - continue-on-error: true
         run: |
+          coreinfo
+
+      - continue-on-error: true
+        run: |
           wmic cpu get Caption,InstructionSet /value
 
       - continue-on-error: true
