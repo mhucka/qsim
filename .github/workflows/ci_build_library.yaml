@@ -48,7 +48,7 @@ jobs:
     steps:
       - continue-on-error: true
         run: |
-          coreinfo
+          coreinfo64
 
       - continue-on-error: true
         run: |
