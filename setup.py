@@ -52,8 +52,7 @@ class CMakeBuild(build_ext):
         if additional_cmake_args:
             cmake_args += additional_cmake_args.split()
 
-        debug = int(os.environ.get("DEBUG", 0)) if self.debug is None else self.debug
-        cfg = "Debug" if debug else "Release"
+        cfg = "Debug" if self.debug else "Release"
         build_args = ["--config", cfg]
 
         if platform.system() == "Windows":
