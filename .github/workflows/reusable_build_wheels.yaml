@@ -90,8 +90,10 @@ jobs:
             dev-requirements.txt
 
       - name: Install Python requirements
+        env:
+          PIP_NO_BINARY: 'pybind'
         run: |
-          PIP_NO_BINARY=pybind pip install -r requirements.txt
+          pip install -r requirements.txt
           pip install -r dev-requirements.txt
           # TODO: try w/o virtualenv
           pip install cibuildwheel==2.23.3 virtualenv==20.31.2
