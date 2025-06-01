@@ -63,8 +63,8 @@ jobs:
           #   arch: arm64
           #   # build: 'cp310* cp311* cp312* cp313*'
 
-          # - os: ubuntu-24.04
-          #   arch: x86_64
+          - os: ubuntu-24.04
+            arch: x86_64
           #   # build: 'cp310* cp311* cp312* cp313*'
 
           - os: windows-2022
@@ -82,7 +82,7 @@ jobs:
         with:
           # python-version: '3.12'
           # python-version: '>=3.10'
-          python-version: '3.10'
+          python-version: '3.11'
           cache: pip
           cache-dependency-path: |
             requirements.txt
