@@ -39,7 +39,7 @@ case "$(uname -s)" in
         features=$(grep -si flags /proc/cpuinfo)
         ;;
     windows*|cygwin*|mingw32*|msys*|mingw*)
-        features=$(wmic cpu get Caption,InstructionSet /value 2>/dev/null)
+        features=$(wmic cpu get NumberOfLogicalProcessors)
         ;;
     *)
         echo "Unsupported OS: $(uname -s)"
