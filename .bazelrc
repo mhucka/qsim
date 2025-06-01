@@ -18,9 +18,11 @@
 common --announce_rc
 common --experimental_repo_remote_exec
 common --verbose_failures
+
+# C++ language selection. The variants are needed because MS Visual Studio on
+# Windows uses slightly different syntax.
 common --enable_platform_specific_config
 
-# Default build options
 build:linux --copt=-std=c++17
 build:linux --copt=-D_GLIBCXX_USE_CXX11_ABI=1
 build:linux --cxxopt=-std=c++17
