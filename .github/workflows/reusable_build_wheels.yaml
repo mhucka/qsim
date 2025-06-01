@@ -44,7 +44,7 @@ jobs:
   build-wheels:
     name: Build on ${{matrix.os}}/${{matrix.arch}}
     runs-on: ${{matrix.os}}
-    timeout-minutes: 20
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
