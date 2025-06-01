@@ -107,10 +107,10 @@ jobs:
       - name: Build and test wheels
         env:
           # Note: additional cibuildwheel settings are in pyproject.toml.
-          CIBW_ARCHS: ${{matrix.arch}}
+          CIBW_ARCHS: '${{matrix.arch}}'
           CIBW_BUILD: ${{matrix.build}}
           # CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 3 || ''}}
-          CIBW_BUILD_VERBOSITY: 3
+          CIBW_BUILD_VERBOSITY: 2
         run: |
           python -m cibuildwheel --output-dir wheelhouse
 
