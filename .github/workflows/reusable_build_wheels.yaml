@@ -91,7 +91,7 @@ jobs:
 
       - name: Install Python requirements
         env:
-          PIP_NO_BINARY: 'pybind'
+          PIP_NO_BINARY: 'pybind11'
         run: |
           pip install -r requirements.txt
           pip install -r dev-requirements.txt
