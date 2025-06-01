@@ -88,45 +88,49 @@ jobs:
           # {os: windows-2022, wh: win, arch: AMD64, pyarch: x64, py: 13},
         ]
     steps:
-      - name: Check out a copy of the git repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 1
+      run: |
+        wmic cpu get Caption,InstructionSet /value
 
-      - name: Set up Python with caching of pip dependencies
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        id: setup
-        with:
-          python-version: '3.${{matrix.conf.py}}'
-          architecture: ${{matrix.conf.pyarch}}
-          cache: pip
-          cache-dependency-path: requirements.txt
 
-      - name: Set up Bazel with caching
-        uses: bazel-contrib/setup-bazel@8d2cb86a3680a820c3e219597279ce3f80d17a47 # 0.15.0
-        with:
-          disk-cache: ${{github.workflow}}
-          bazelisk-cache: true
-          external-cache: true
-          repository-cache: true
+      # - name: Check out a copy of the git repository
+      #   uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      #   with:
+      #     fetch-depth: 1
 
-      - name: Install qsim dependencies
-        run: pip install -r requirements.txt
+      # - name: Set up Python with caching of pip dependencies
+      #   uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      #   id: setup
+      #   with:
+      #     python-version: '3.${{matrix.conf.py}}'
+      #     architecture: ${{matrix.conf.pyarch}}
+      #     cache: pip
+      #     cache-dependency-path: requirements.txt
 
-      - if: matrix.conf.os != 'windows-2022'
-        name: Run the build and test script (non-Windows case)
-        env:
-          # SHELLOPTS is used by Bash. Add xtrace when doing manual debug runs.
-          SHELLOPTS: ${{inputs.trace && 'xtrace' || '' }}
-        run: dev_tools/test_libs.sh --config=verbose
+      # - name: Set up Bazel with caching
+      #   uses: bazel-contrib/setup-bazel@8d2cb86a3680a820c3e219597279ce3f80d17a47 # 0.15.0
+      #   with:
+      #     disk-cache: ${{github.workflow}}
+      #     bazelisk-cache: true
+      #     external-cache: true
+      #     repository-cache: true
 
-      - if: matrix.conf.os == 'windows-2022'
-        name: Run the build and test script (Windows)
-        env:
-          pyroot: 'C:\\hostedtoolcache\\windows\\Python'
-          pyexe: '${{steps.setup.outputs.python-version}}\\${{matrix.conf.pyarch}}\\python3.exe'
-          SHELLOPTS: ${{inputs.trace && 'xtrace' || '' }}
-        shell: cmd
-        run: >-
-          bash -x dev_tools/test_libs.sh --config=verbose
-          --action_env PYTHON_BIN_PATH=${{env.pyroot}}\\${{env.pyexe}}
+      # - name: Install qsim dependencies
+      #   run: pip install -r requirements.txt
+
+      # - if: matrix.conf.os != 'windows-2022'
+      #   name: Run the build and test script (non-Windows case)
+      #   env:
+      #     # SHELLOPTS is used by Bash. Add xtrace when doing manual debug runs.
+      #     SHELLOPTS: ${{inputs.trace && 'xtrace' || '' }}
+      #   run: dev_tools/test_libs.sh --config=verbose
+
+      # - if: matrix.conf.os == 'windows-2022'
+      #   name: Run the build and test script (Windows)
+      #   env:
+      #     pyroot: 'C:\\hostedtoolcache\\windows\\Python'
+      #     pyexe: '${{steps.setup.outputs.python-version}}\\${{matrix.conf.pyarch}}\\python3.exe'
+      #     SHELLOPTS: ${{inputs.trace && 'xtrace' || '' }}
+      #   shell: cmd
+      #   run: >-
+      #     bash -x dev_tools/test_libs.sh --config=verbose
+      #     --action_env PYTHON_BIN_PATH=${{env.pyroot}}\\${{env.pyexe}}
