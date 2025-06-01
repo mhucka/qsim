@@ -51,25 +51,25 @@ jobs:
         # See the following page for a list of valid cibuildwheel arch values:
         # https://cibuildwheel.pypa.io/en/stable/options/#archs
         include:
-          # - os: macos-13
-          #   arch: x86_64
-          #   # build: 'cp310* cp311* cp312* cp313*'
+          - os: macos-13
+            arch: x86_64
+            # build: 'cp310* cp311* cp312* cp313*'
 
           # - os: macos-14
           #   arch: arm64
           #   # build: 'cp310* cp311* cp312* cp313*'
 
-          # - os: macos-15
-          #   arch: arm64
-          #   # build: 'cp310* cp311* cp312* cp313*'
+          - os: macos-15
+            arch: arm64
+            # build: 'cp310* cp311* cp312* cp313*'
 
-          # - os: ubuntu-24.04
-          #   arch: x86_64
-          #   # build: 'cp310* cp311* cp312* cp313*'
+          - os: ubuntu-24.04
+            arch: x86_64
+            # build: 'cp310* cp311* cp312* cp313*'
 
           - os: windows-2022
             arch: AMD64
-            build: "cp310-win_amd64 cp311-win_amd64 cp312-win_amd64"
+            # build: "cp310-win_amd64 cp311-win_amd64 cp312-win_amd64"
             # cp13 fails w/ NumPy 1.x. TODO: remove when qsim supports np 2.
             skip: 'cp313*'
     steps:
@@ -90,8 +90,6 @@ jobs:
             dev-requirements.txt
 
       - name: Install Python requirements
-        env:
-          PIP_NO_BINARY: 'pybind11[global]'
         run: |
           pip install -r requirements.txt
           pip install -r dev-requirements.txt
@@ -109,18 +107,15 @@ jobs:
         env:
           # Note: additional cibuildwheel settings are in pyproject.toml.
           CIBW_ARCHS: ${{matrix.arch}}
-          CIBW_BUILD: ${{matrix.build}}
-          # CIBW_BUILD: 'cp310* cp311* cp312* cp313*'
+          # CIBW_BUILD: ${{matrix.build}}
+          CIBW_BUILD: 'cp310* cp311* cp312* cp313*'
           # CIBW_BUILD: 'cp312*'
           # CIBW_BUILD: 'cp310*'
           CIBW_SKIP: ${{matrix.skip}}
-          # CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 1 || ''}}
-          CIBW_BUILD_VERBOSITY: 1
-          # Don't color the output b/c it makes reading raw logs hard
-          CLICOLOR: 0
-          # new var I added to setup.py
+          CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 1 || ''}}
+          # CLICOLOR is recognized by CMake.
+          CLICOLOR: ${{inputs.verbose && 0 || ''}}
           DEBUG: 1
-          PIP_NO_BINARY: 'pybind11[global]'
         run: |
           cibuildwheel --output-dir wheelhouse
 
