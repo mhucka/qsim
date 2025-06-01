@@ -52,7 +52,7 @@ jobs:
 
       - continue-on-error: true
         run: |
-          WMIC CPU Get NumberOfLogicalProcessors
+          wmic cpu get Name, Caption, InstructionSet
 
       # - continue-on-error: true
       #   run: |
