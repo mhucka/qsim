@@ -120,6 +120,7 @@ jobs:
           CLICOLOR: 0
           # new var I added to setup.py
           DEBUG: 1
+          PIP_NO_BINARY: 'pybind'
         run: |
           cibuildwheel --output-dir wheelhouse
 
