@@ -88,8 +88,8 @@ jobs:
           # {os: windows-2022, wh: win, arch: AMD64, pyarch: x64, py: 13},
         ]
     steps:
-      run: |
-        wmic cpu get Caption,InstructionSet /value
+      - run: |
+          wmic cpu get Caption,InstructionSet /value
 
 
       # - name: Check out a copy of the git repository
