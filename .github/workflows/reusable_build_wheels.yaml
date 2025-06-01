@@ -95,13 +95,16 @@ jobs:
           os=${{matrix.os}}
           echo MACOSX_DEPLOYMENT_TARGET=${os: -2} >> "$GITHUB_ENV"
 
-      - name: Determine number of cores available in this Linux runner
+      - if: startsWith(matrix.os, 'ubuntu')
+        name: Determine number of cores available in this Linux runner
         run: echo "num_cores=$(nproc)" >> "$GITHUB_ENV"
 
-      - name: Determine number of cores available in this MacOS runner
+      - if: startsWith(matrix.os, 'macos')
+        name: Determine number of cores available in this MacOS runner
         run: echo "num_cores=$(sysctl -n hw.ncpu)" >> "$GITHUB_ENV"
 
-      - name: Determine number of cores available in this Windows runner
+      - if: startsWith(matrix.os, 'win')
+        name: Determine number of cores available in this Windows runner
         shell: bash
         run: echo "num_cores=$NUMBER_OF_PROCESSORS" >> "$GITHUB_ENV"
 
@@ -112,7 +115,7 @@ jobs:
           CIBW_SKIP: ${{matrix.skip}}
           CIBW_ARCHS: ${{matrix.arch}}
           CIBW_BUILD_VERBOSITY: ${{inputs.verbose && 1 || ''}}
-          # Color codes make logs hard to read. (CLICOLOR is used by CMake.)
+          # Color codes make raw logs hard to read. (CLICOLOR is used by CMake.)
           CLICOLOR: ${{inputs.verbose && 0 || ''}}
           CMAKE_BUILD_PARALLEL_LEVEL: ${{env.num_cores}}
         run: |
