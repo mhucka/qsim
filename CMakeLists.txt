@@ -1,16 +1,17 @@
 set(CMAKE_CXX_STANDARD 11)
 cmake_minimum_required(VERSION 3.31)
 
+# Set prelimary value so that other variables we need are defined
 project(qsim)
 
-# Check if CMAKE_SYSTEM_NAME is Darwin (macOS) and CMAKE_SYSTEM_PROCESSOR is arm64
+# Darwin + Arm64 => Apple Silicon, where we can't build Cuda, AVX or SSE features.
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
     set(APPLE_ARM TRUE)
 else()
     set(APPLE_ARM FALSE)
 endif()
 
-# Set the project name and language
+# Set the project name and language more precisely
 if(APPLE)
     project(qsim LANGUAGES CXX)
 else()
