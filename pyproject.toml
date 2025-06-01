@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[build-system]
-requires = ["setuptools", "pybind11[global]", "cmake~=3.31.0"]
-build-backend = "setuptools.build_meta"
-
 [tool.cibuildwheel]
 skip = "*musllinux*"
 dependency-versions = "latest"

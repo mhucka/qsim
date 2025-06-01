@@ -116,6 +116,12 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           # Don't color the output b/c it makes reading raw logs hard
           CLICOLOR: 0
+          # new var I added to setup.py
+          DEBUG: 1
+          CIBW_CMAKE_ARGS_WINDOWS: >-
+            -DPYTHON_EXECUTABLE="{python_executable}"
+            -DPYTHON_INCLUDE_DIR="{python_include_dir}"
+            -DPYTHON_LIBRARY="{python_library}"
         run: |
           cibuildwheel --output-dir wheelhouse
 
