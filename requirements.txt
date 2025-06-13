@@ -3,4 +3,4 @@ cirq-core~=1.0
 numpy>=1.26.0
 pybind11[global]
 typing_extensions
-setuptools
+setuptools>=78
