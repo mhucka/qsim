@@ -1,5 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
-set(GLIBCXX_USE_CXX11_ABI 1)
+set(CMAKE_CXX_STANDARD 11)
 cmake_minimum_required(VERSION 3.31)
 
 # Set prelimary value so that other variables we need are defined
