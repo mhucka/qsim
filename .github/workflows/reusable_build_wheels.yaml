@@ -99,8 +99,7 @@ jobs:
       - if: startsWith(matrix.conf.os, 'win')
         name: Determine the number of threads to use (Windows)
         shell: bash
-        # run: echo "num_threads=$(( NUMBER_OF_PROCESSORS - 1 ))" >> "$GITHUB_ENV"
-        run: echo "num_threads=1" >> "$GITHUB_ENV"
+        run: echo "num_threads=$(( NUMBER_OF_PROCESSORS - 1 ))" >> "$GITHUB_ENV"
 
       - name: Build and test wheels
         env:
@@ -113,7 +112,7 @@ jobs:
           CLICOLOR: ${{inputs.debug && 0 || ''}}
           CMAKE_BUILD_PARALLEL_LEVEL: ${{env.num_threads}}
         run: |
-          python3 -m cibuildwheel --output-dir wheelhouse
+          cibuildwheel --output-dir wheelhouse
 
       - if: inputs.upload != false
         name: Upload wheels to GitHub
