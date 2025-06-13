@@ -88,21 +88,34 @@ jobs:
           os=${{matrix.conf.os}}
           echo MACOSX_DEPLOYMENT_TARGET=${os: -2} >> "$GITHUB_ENV"
 
-      - name: Determine the number of threads we can tell cibuildwheel to use
-        shell: python
-        run: |
-          import os
-          num_cpus = os.cpu_count()
-          threads = 1
-          if num_cpus is not None and num_cpus > 0:
-            threads = max(1, num_cpus - 1)
-          else:
-            # On Windows, may need to fall back to using NUMBER_OF_PROCESSORS.
-            num_procs_env = os.environ.get('NUMBER_OF_PROCESSORS')
-            if num_procs_env and num_procs_env.isdigit():
-                threads = max(1, int(num_procs_env) - 1)
-          with open(os.environ['GITHUB_ENV'], 'a') as f:
-            f.write(f"num_threads={threads}\n")
+      - if: startsWith(matrix.conf.os, 'ubuntu')
+        name: Determine the number of threads to use (Linux)
+        run: echo "num_threads=$(( $(nproc) - 1 ))" >> "$GITHUB_ENV"
+
+      - if: startsWith(matrix.conf.os, 'macos')
+        name: Determine the number of threads to use (MacOS)
+        run: echo "num_threads=$(( $(sysctl -n hw.ncpu) - 1 ))" >> "$GITHUB_ENV"
+
+      - if: startsWith(matrix.conf.os, 'win')
+        name: Determine the number of threads to use (Windows)
+        shell: bash
+        run: echo "num_threads=$(( NUMBER_OF_PROCESSORS - 1 ))" >> "$GITHUB_ENV"
+
+      # - name: Determine the number of threads we can tell cibuildwheel to use
+      #   shell: python
+      #   run: |
+      #     import os
+      #     num_cpus = os.cpu_count()
+      #     threads = 1
+      #     if num_cpus is not None and num_cpus > 0:
+      #       threads = max(1, num_cpus - 1)
+      #     else:
+      #       # On Windows, may need to fall back to using NUMBER_OF_PROCESSORS.
+      #       num_procs_env = os.environ.get('NUMBER_OF_PROCESSORS')
+      #       if num_procs_env and num_procs_env.isdigit():
+      #           threads = max(1, int(num_procs_env) - 1)
+      #     with open(os.environ['GITHUB_ENV'], 'a') as f:
+      #       f.write(f"num_threads={threads}\n")
 
       - name: Build and test wheels
         env:
