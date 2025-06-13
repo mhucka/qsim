@@ -70,7 +70,7 @@ jobs:
           cache-dependency-path: dev-requirements.txt
 
       - name: Install dev requirements
-        run: python3 -m pip install -r dev-requirements.txt
+        run: pip install -r dev-requirements.txt
 
       - name: Check Python file format
         env:

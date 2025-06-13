@@ -112,8 +112,8 @@ jobs:
 
       - name: Install qsim development dependencies
         run: |
-          python3 -m pip install -r requirements.txt
-          python3 -m pip install -r dev-requirements.txt
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
 
       - if: matrix.conf.os != 'windows-2022'
         name: Run the build and test script (non-Windows case)
