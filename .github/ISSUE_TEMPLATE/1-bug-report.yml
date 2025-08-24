@@ -32,7 +32,7 @@ body:
         sections](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections)
         or attach text files.
       placeholder: >-
-        Write an explanation of how to reproduce the issue here
+        Write a step-by-step explanation of how to reproduce the issue here
     validations:
       required: false
 
