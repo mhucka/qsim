@@ -30,9 +30,9 @@ body:
 
         If you are using the Python package (`qsimcirq`) and are running within
         a terminal emulator, then typing the following command in the shell will
-        print the version number:
+        print the version number:<br>
 
-        ```shell
+        ```
         python3 -c 'import qsimcirq; print(qsimcirq.__version__)'
         ```
 
@@ -40,9 +40,9 @@ body:
 
         If you are using the `qsimcirq` package in a Google Colab or Jupyter
         notebook, then running the following command will print the version
-        number:
+        number:<br>
 
-        ```python
+        ```
         import qsimcirq; print(qsimcirq.__version__)
         ```
     validations:
