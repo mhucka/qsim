@@ -38,7 +38,7 @@ body:
 
   - type: input
     attributes:
-      label: Tell us the version of qsim or qsimcirq
+      label: Tell us the version of qsim or qsimcirq (if relevant)
       description: |-
         For qsim software problems, we need to know the exact version you are
         using. If you are using the Python package and are running within a
@@ -56,11 +56,11 @@ body:
 
   - type: input
     attributes:
-      label: Tell us the computing environment
+      label: Tell us the computing environment (if relevant)
       description: >-
         Please tell us if you are using Linux, macOS, Windows, Google Colab, or
         something else, and its version.
       placeholder: >-
-        Write the computing environment and version here
+        Report the computing environment and its version here
     validations:
       required: false
