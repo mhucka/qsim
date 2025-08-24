@@ -22,23 +22,16 @@ body:
 
   - type: input
     attributes:
-      label: Tell us the version of qsim or qsimcirq you are using
+      label: Tell us the version of qsim or qsimcirq
       description: |-
         We need to know the version installed in your computing environment. If
         you are using the Python package and are running within a terminal
         emulator, then typing the following command in the shell will print the
-        version number:<br>
-
-        ```
-        python3 -c 'import qsimcirq; print(qsimcirq.__version__)'
-        ```
+        version number `python3 -c 'import qsimcirq; print(qsimcirq.__version__)'`.
 
         If you are using a Google Colab or Jupyter notebook environment, then
-        running the following command will print the version number:<br>
-
-        ```
-        import qsimcirq; print(qsimcirq.__version__)
-        ```
+        running the following command will print the version number:
+        `import qsimcirq; print(qsimcirq.__version__)`
       placeholder: >-
         qsim/qsimcirq version number
     validations:
@@ -46,7 +39,7 @@ body:
 
   - type: input
     attributes:
-      label: Tell us about the computing environment you are using
+      label: Tell us the computing environment
       description: >-
         Please tell us if you are using Linux, macOS, Windows, Google Colab, or
         something else, and its version.
@@ -57,7 +50,7 @@ body:
 
   - type: textarea
     attributes:
-      label: Tell us how the issue can be reproduced
+      label: Tell us how to reproduce the issue
       description: >-
         Explain in a step-by-step fashion what someone else will need to
         do in order to reproduce the issue. If possible, include literal
