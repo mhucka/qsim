@@ -16,7 +16,7 @@ body:
         Please explain clearly and in detail what the issue is. How did you
         encounter it? What were you trying to do?
       placeholder: >-
-        Describe the issue
+        Describe the issue here
     validations:
       required: true
 
@@ -34,7 +34,7 @@ body:
         the version number:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         `import qsimcirq; print(qsimcirq.__version__)`.
       placeholder: >-
-        The qsim/qsimcirq version number
+        Write down the qsim/qsimcirq version number here
     validations:
       required: false
 
@@ -45,7 +45,7 @@ body:
         Please tell us if you are using Linux, macOS, Windows, Google Colab, or
         something else, and its version.
       placeholder: >-
-        The computing environment and version
+        Write down the computing environment and version here
     validations:
       required: false
 
@@ -61,6 +61,6 @@ body:
         sections](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections)
         or attach text files.
       placeholder: >-
-        How to reproduce the issue
+        Write an explanation of how to reproduce the issue here
     validations:
       required: false
