@@ -3,7 +3,7 @@ description: As a question
 body:
   - type: markdown
     attributes:
-      value: |
+      value: >-
         Thank you for your interest in qsim! Before continuing, it's worth
         [searching through the existing issues in this
         repository](https://github.com/quantumlib/qsim/issues?q=is%3Aissue) in

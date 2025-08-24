@@ -3,7 +3,7 @@ description: Request a new feature or change in qsim
 body:
   - type: markdown
     attributes:
-      value: |
+      value: >-
         Thank you for taking the time to fill out this feature request form!
 
   - type: textarea
