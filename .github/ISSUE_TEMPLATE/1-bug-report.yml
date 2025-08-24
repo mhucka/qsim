@@ -34,7 +34,7 @@ body:
         the version number:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         `import qsimcirq; print(qsimcirq.__version__)`.
       placeholder: >-
-        Write down the qsim/qsimcirq version number here
+        Write the qsim version number here
     validations:
       required: false
 
@@ -45,7 +45,7 @@ body:
         Please tell us if you are using Linux, macOS, Windows, Google Colab, or
         something else, and its version.
       placeholder: >-
-        Write down the computing environment and version here
+        Write the computing environment and version here
     validations:
       required: false
 
