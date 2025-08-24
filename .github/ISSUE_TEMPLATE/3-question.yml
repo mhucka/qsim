@@ -23,9 +23,6 @@ body:
   - type: input
     attributes:
       label: Does this concern a specific version of qsim? If so, what version?
-      description: >-
-        If the question involves specific features or operation of
-        qsim/qsimcirq, please let us know the version number.
       placeholder: >-
         Write the qsim version number here
     validations:
