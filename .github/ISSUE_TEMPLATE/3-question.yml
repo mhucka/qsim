@@ -1,6 +1,5 @@
 name: Question
 description: As a question
-type: Question
 body:
   - type: markdown
     attributes:

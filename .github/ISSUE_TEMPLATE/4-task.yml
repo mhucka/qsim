@@ -1,6 +1,5 @@
 name: Task
 description: Describe a task that needs to be done
-type: Task
 body:
   - type: markdown
     attributes:

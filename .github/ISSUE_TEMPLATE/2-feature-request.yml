@@ -1,6 +1,5 @@
 name: Feature request
 description: Request a new feature or change in qsim
-type: Enhancement
 body:
   - type: markdown
     attributes:
