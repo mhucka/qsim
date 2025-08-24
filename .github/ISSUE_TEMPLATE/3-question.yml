@@ -15,6 +15,8 @@ body:
       description: >-
         Please provide enough details and contextual information so that the
         question is answerable.
+      placeholder: >-
+        Write your question here
     validations:
       required: true
 
@@ -24,6 +26,8 @@ body:
       description: >-
         If the question involves specific features or operation of
         qsim/qsimcirq, please let us know the version number.
+      placeholder: >-
+        Write the qsim version number here
     validations:
       required: false
 
@@ -35,5 +39,7 @@ body:
         tell us those details as well. It may matter, for example, whether you
         are using Linux, macOS, Windows, or Google Colab, as well as whether
         you are trying to use CUDA (and what version), and other details.
+      placeholder: >-
+        Describe the computing environment here
     validations:
       required: false
