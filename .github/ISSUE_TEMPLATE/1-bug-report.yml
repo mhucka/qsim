@@ -5,9 +5,9 @@ body:
     attributes:
       value: >-
         Thank you for taking the time to open an issue report. Before
-        continuing, it's worth [searching through the existing issues in this
+        continuing, please [search the existing issues in this
         repository](https://github.com/quantumlib/qsim/issues?q=is%3Aissue) in
-        case the same issue has already been asked and possibly answered.
+        case the same topic has already been reported.
 
   - type: textarea
     attributes:
@@ -21,10 +21,9 @@ body:
   - type: input
     attributes:
       label: Tell us the version of qsim or qsimcirq you are using
-      description: >-
-        If the problem involves a qsim/qsimcirq error or behavior, it is vital
-        that we know the version installed in your computing environment. This
-        can be determined in more than one way.
+      description: |-
+        We need to know the version installed in your computing environment.
+        This can be determined in more than one way.
 
         **In a terminal:**
 
@@ -36,7 +35,7 @@ body:
         python3 -c 'import qsimcirq; print(qsimcirq.__version__)'
         ```
 
-        **In a Colab or Jupyter notebook:**
+        <br>**In a Colab or Jupyter notebook:**
 
         If you are using the `qsimcirq` package in a Google Colab or Jupyter
         notebook, then running the following command will print the version
@@ -52,10 +51,8 @@ body:
     attributes:
       label: Tell us about the computing environment you are using
       description: >-
-        To investigate the cause of the problem, we will also need to know the
-        computing environment you are using. Please tell us if you are using
-        Linux, macOS, Windows, Google Colab, or something else. If it is a
-        Linux/Mac/Windows environment, please also tell us its version.
+        Please tell us if you are using Linux, macOS, Windows, Google Colab, or
+        something else, and its version.
     validations:
       required: false
 
