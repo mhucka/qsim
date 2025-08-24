@@ -15,6 +15,8 @@ body:
       description: >-
         Please explain clearly and in detail what the issue is. How did you
         encounter it? What were you trying to do?
+      placeholder: >-
+        Describe the issue
     validations:
       required: true
 
@@ -22,28 +24,23 @@ body:
     attributes:
       label: Tell us the version of qsim or qsimcirq you are using
       description: |-
-        We need to know the version installed in your computing environment.
-        This can be determined in more than one way.
-
-        **In a terminal:**
-
-        If you are using the Python package (`qsimcirq`) and are running within
-        a terminal emulator, then typing the following command in the shell will
-        print the version number:<br>
+        We need to know the version installed in your computing environment. If
+        you are using the Python package and are running within a terminal
+        emulator, then typing the following command in the shell will print the
+        version number:<br>
 
         ```
         python3 -c 'import qsimcirq; print(qsimcirq.__version__)'
         ```
 
-        <br>**In a Colab or Jupyter notebook:**
-
-        If you are using the `qsimcirq` package in a Google Colab or Jupyter
-        notebook, then running the following command will print the version
-        number:<br>
+        If you are using a Google Colab or Jupyter notebook environment, then
+        running the following command will print the version number:<br>
 
         ```
         import qsimcirq; print(qsimcirq.__version__)
         ```
+      placeholder: >-
+        qsim/qsimcirq version number
     validations:
       required: false
 
@@ -53,6 +50,8 @@ body:
       description: >-
         Please tell us if you are using Linux, macOS, Windows, Google Colab, or
         something else, and its version.
+      placeholder: >-
+        Computing environment and version
     validations:
       required: false
 
@@ -67,9 +66,7 @@ body:
         For long output, paste the text into [collapsed
         sections](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections)
         or attach text files.
-      placeholder: |
-        1. …
-        2. …
-        3. …
+      placeholder: >-
+        How to reproduce the issue
     validations:
       required: false
