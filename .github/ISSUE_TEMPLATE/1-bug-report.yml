@@ -32,7 +32,7 @@ body:
         If you are using a Google Colab or Jupyter notebook environment,
         then running the following command in a notebook cell will print
         the version number:<br>&nbsp;&nbsp;&nbsp;&nbsp;
-        `import qsimcirq; print(qsimcirq.__version__)`.<br>
+        `import qsimcirq; print(qsimcirq.__version__)`.<br><br>
       placeholder: >-
         qsim/qsimcirq version number
     validations:
