@@ -14,7 +14,7 @@ body:
       label: Describe the issue
       description: >-
         Please explain clearly and in detail what the issue is. What were you
-        trying to do? What happened?
+        trying to do? What happened? What was unexpected about what happened?
       placeholder: >-
         Write the description here
     validations:
@@ -61,6 +61,6 @@ body:
         Please tell us if you are using Linux, macOS, Windows, Google Colab, or
         something else, and its version.
       placeholder: >-
-        Report the computing environment and its version here
+        Describe the computing environment and its version here
     validations:
       required: false
