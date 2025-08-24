@@ -16,7 +16,7 @@ body:
         Please explain clearly and in detail what the issue is. What were you
         trying to do? What happened? What was unexpected about what happened?
       placeholder: >-
-        Write the description here
+        Describe the issue here
     validations:
       required: true
 
