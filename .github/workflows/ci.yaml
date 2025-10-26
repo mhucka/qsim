@@ -344,6 +344,15 @@ jobs:
         shell: cmd
         run: bash -x dev_tools/test_libs.sh ${{inputs.debug && '--config=verbose'}} --action_env PYTHON_BIN_PATH=${{env.root}}\\${{env.exe}}
 
+      - name: Install OMP on macOS
+        if: startsWith(matrix.os, 'macos')
+        run: |
+          brew install -q libomp llvm@19
+          brew unlink libomp
+          brew unlink llvm@19
+          brew link --force libomp
+          brew link --force llvm@19
+
       - name: Run Python tests
         shell: bash
         run: |
