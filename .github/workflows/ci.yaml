@@ -104,43 +104,45 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/black.json'
           check/format-incremental
 
-  python-lint:
-    name: Python lint checks
-    needs: [python-format]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    steps:
-      - name: Check out a copy of the git repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-        with:
-          fetch-depth: 0
+  # TODO(mhucka): enable pylint check after PR #911 is merged.
+  #
+  # python-lint:
+  #   name: Python lint checks
+  #   needs: [python-format]
+  #   runs-on: ubuntu-24.04
+  #   timeout-minutes: 15
+  #   steps:
+  #     - name: Check out a copy of the git repository
+  #       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Get a list of changed Python files
-        id: changes
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        with:
-          base_sha: ${{inputs.base_sha}}
-          files: '**/*.py'
+  #     - name: Get a list of changed Python files
+  #       id: changes
+  #       uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+  #       with:
+  #         base_sha: ${{inputs.base_sha}}
+  #         files: '**/*.py'
 
-      - name: Set up Python
-        if: steps.changes.outputs.any_changed == 'true'
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v5
-        with:
-          python-version: ${{env.python-version}}
-          cache: pip
-          cache-dependency-path: |
-            requirements.txt
-            dev-requirements.txt
+  #     - name: Set up Python
+  #       if: steps.changes.outputs.any_changed == 'true'
+  #       uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v5
+  #       with:
+  #         python-version: ${{env.python-version}}
+  #         cache: pip
+  #         cache-dependency-path: |
+  #           requirements.txt
+  #           dev-requirements.txt
 
-      - name: Install dependencies
-        if: steps.changes.outputs.any_changed == 'true'
-        run: pip install pylint~=3.3.1
+  #     - name: Install dependencies
+  #       if: steps.changes.outputs.any_changed == 'true'
+  #       run: pip install pylint~=3.3.1
 
-      - name: Lint the changed Python files
-        if: steps.changes.outputs.any_changed == 'true'
-        run: |
-          echo '::add-matcher::.github/problem-matchers/pylint.json'
-          pylint -j 0 -v ${{steps.changes.outputs.all_changed_files}}
+  #     - name: Lint the changed Python files
+  #       if: steps.changes.outputs.any_changed == 'true'
+  #       run: |
+  #         echo '::add-matcher::.github/problem-matchers/pylint.json'
+  #         pylint -j 0 -v ${{steps.changes.outputs.all_changed_files}}
 
   docker-lint:
     name: Dockerfile checks
@@ -253,12 +255,13 @@ jobs:
     name: (Test for early exit)
     if: always()
     needs:
-      - python-format
-      - python-lint
+      - action-lint
       - docker-lint
+      - python-format
+      # TODO(mhucka): enable pylint check after PR #911 is merged.
+      # - python-lint
       - shell-script-lint
       - yaml-lint
-      - action-lint
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
