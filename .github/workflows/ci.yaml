@@ -326,7 +326,6 @@ jobs:
         with:
           version: "19.1.7"
           cached: true
-          env: true
 
       - name: Configure compiler options on macOS
         if: startsWith(matrix.os, 'macos')
