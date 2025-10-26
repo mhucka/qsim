@@ -326,14 +326,7 @@ jobs:
         with:
           version: "19.1.7"
 
-      - name: Configure compiler options on macOS
-        if: startsWith(matrix.os, 'macos')
-        run: |
-          xcode_include="$(xcrun --sdk macosx --show-sdk-path)"/usr/include
-          export CPATH="${CPATH:+${CPATH}:}${xcode_include}"
-          echo "CPATH=${CPATH}" >> "$GITHUB_ENV"
-
-      - name: Install OpenMP on macOS
+      - name: Install and configure OpenMP and compiler options on macOS
         if: startsWith(matrix.os, 'macos')
         run: |
           brew install -q libomp llvm@19
@@ -341,6 +334,18 @@ jobs:
           brew unlink llvm@19
           brew link --force libomp
           brew link --force llvm@19
+
+          xcode_prefix="$(xcrun --sdk macosx --show-sdk-path)"
+          brew_prefix="$(brew --prefix llvm)"
+
+          export PATH="${brew_prefix}/bin:$PATH"
+          echo "PATH=${PATH}" >> "$GITHUB_ENV"
+
+          export LDFLAGS="-L${brew_prefix}/lib -Wl,-rpath,${brew_prefix}/lib"
+          echo "LDFLAGS=${LDFLAGS}" >> "$GITHUB_ENV"
+
+          export CXXFLAGS="-I${xcode_prefix}/usr/include -I${brew_prefix}/include -O3 -std=c++17 -fopenmp -flto=auto"
+          echo "CXXFLAGS=${CXXFLAGS}" >> "$GITHUB_ENV"
 
       - name: Run Python tests
         shell: bash
