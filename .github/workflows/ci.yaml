@@ -325,11 +325,15 @@ jobs:
         uses: KyleMayes/install-llvm-action@a7a1a882e2d06ebe05d5bb97c3e1f8c984ae96fc # v2
         with:
           version: "19.1.7"
+          cached: true
           env: true
 
-      - name: Install Xcode CLI tools on macOS
+      - name: Configure compiler options on macOS
         if: startsWith(matrix.os, 'macos')
-        run: xcode-select --install
+        run: |
+          xcode_include="$(xcrun --sdk macosx --show-sdk-path)"/usr/include
+          export CPATH="${CPATH:+${CPATH}:}${xcode_include}"
+          echo "CPATH=${CPATH}" >> "$GITHUB_ENV"
 
       - name: Install OpenMP on macOS
         if: startsWith(matrix.os, 'macos')
