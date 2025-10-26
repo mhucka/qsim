@@ -324,7 +324,7 @@ jobs:
         if: startsWith(matrix.os, 'macos')
         uses: KyleMayes/install-llvm-action@a7a1a882e2d06ebe05d5bb97c3e1f8c984ae96fc # v2
         with:
-          version: "19.0"
+          version: "19.1.7"
           env: true
 
       - name: Install OpenMP on macOS
