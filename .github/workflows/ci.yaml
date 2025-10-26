@@ -325,7 +325,6 @@ jobs:
         uses: KyleMayes/install-llvm-action@a7a1a882e2d06ebe05d5bb97c3e1f8c984ae96fc # v2
         with:
           version: "19.1.7"
-          cached: true
 
       - name: Configure compiler options on macOS
         if: startsWith(matrix.os, 'macos')
