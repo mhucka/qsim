@@ -43,6 +43,11 @@ runs:
         fi
         echo "version=$(cat .bazelversion | tr -d ' \n\r')" >> "$GITHUB_OUTPUT"
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Install Bazelisk
       env:
         BAZELISK_SHOW_PROGRESS: ${{inputs.debug == 'true'}}
