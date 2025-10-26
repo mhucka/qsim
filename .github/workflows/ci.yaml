@@ -104,7 +104,8 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/black.json'
           check/format-incremental
 
-  # TODO(mhucka): enable pylint check after PR #911 is merged.
+  # TODO(mhucka): after PR #911 is merged, uncomment this to enable pylint
+  # checks and also add python-lint to jobs that have "needs".
   #
   # python-lint:
   #   name: Python lint checks
@@ -251,39 +252,14 @@ jobs:
           flags: ${{inputs.debug && '-verbose'}} ${{steps.changes.outputs.all_changed_files}}
           pyflakes: false
 
-  continue-testing:
-    name: (Test for early exit)
-    if: always()
+  library-tests:
+    name: Library tests on ${{matrix.os}} + Py ${{matrix.python_version}}
     needs:
       - action-lint
       - docker-lint
       - python-format
-      # TODO(mhucka): enable pylint check after PR #911 is merged.
-      # - python-lint
       - shell-script-lint
       - yaml-lint
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    env:
-      checks-ok: >-
-        ${{!contains(needs.*.result, 'failure')
-          && !contains(needs.*.result, 'cancelled')}}
-    outputs:
-      proceed: ${{env.checks-ok || inputs.debug}}
-    steps:
-      # Stop the entire workflow with an error, unless we're in debugging mode.
-      - if: ${{env.checks-ok == 'false' && inputs.debug != 'true'}}
-        name: Print error message to workflow summary
-        run: |
-          {
-          echo -n ":x: Basic checks failed; skipping longer tests. "
-          echo "Please correct the problems found so far."
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit 1
-
-  library-tests:
-    name: Library tests on ${{matrix.os}} + Py ${{matrix.python_version}}
-    needs: continue-testing
     runs-on: ${{matrix.os}}
     timeout-minutes: 60
     strategy:
@@ -344,7 +320,14 @@ jobs:
         shell: cmd
         run: bash -x dev_tools/test_libs.sh ${{inputs.debug && '--config=verbose'}} --action_env PYTHON_BIN_PATH=${{env.root}}\\${{env.exe}}
 
-      - name: Install OMP on macOS
+      - name: Install LLVM and Clang on macOS
+        if: startsWith(matrix.os, 'macos')
+        uses: KyleMayes/install-llvm-action@a7a1a882e2d06ebe05d5bb97c3e1f8c984ae96fc # v2
+        with:
+          version: "19.0"
+          env: true
+
+      - name: Install OpenMP on macOS
         if: startsWith(matrix.os, 'macos')
         run: |
           brew install -q libomp llvm@19
@@ -361,7 +344,12 @@ jobs:
 
   hardware-options-tests:
     name: Hardware options tests
-    needs: continue-testing
+    needs:
+      - action-lint
+      - docker-lint
+      - python-format
+      - shell-script-lint
+      - yaml-lint
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
@@ -411,7 +399,12 @@ jobs:
 
   memory-addressing-tests:
     name: Malloc/asan/msan tests
-    needs: continue-testing
+    needs:
+      - action-lint
+      - docker-lint
+      - python-format
+      - shell-script-lint
+      - yaml-lint
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
@@ -461,7 +454,12 @@ jobs:
 
   docker-tests:
     name: Docker build tests
-    needs: continue-testing
+    needs:
+      - action-lint
+      - docker-lint
+      - python-format
+      - shell-script-lint
+      - yaml-lint
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
