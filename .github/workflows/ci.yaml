@@ -100,6 +100,7 @@ jobs:
       - name: Check the format of changed Python files
         if: steps.changes.outputs.any_changed == 'true'
         run: |
+          echo '::add-matcher::.github/problem-matchers/flynt.json'
           echo '::add-matcher::.github/problem-matchers/black.json'
           check/format-incremental
 
@@ -133,9 +134,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.changes.outputs.any_changed == 'true'
-        run: |
-          pip install -r requirements.txt
-          pip install -r dev-requirements.txt
+        run: pip install pylint~=3.3.1
 
       - name: Lint the changed Python files
         if: steps.changes.outputs.any_changed == 'true'
@@ -216,7 +215,7 @@ jobs:
           base_sha: ${{inputs.base_sha}}
           files: '**/*.{yaml,yml}'
           # Ignore GHA workflows here. A separate job handles workflow files.
-          files_ignore: '.github/workflows/**'
+          files_ignore: .github/workflows/**
 
       - name: Lint the YAML files
         if: steps.changes.outputs.any_changed == 'true'
@@ -250,49 +249,38 @@ jobs:
           flags: ${{inputs.debug && '-verbose'}} ${{steps.changes.outputs.all_changed_files}}
           pyflakes: false
 
-  code-changes:
-    name: (Detect code changes)
+  continue-testing:
+    name: (Test for early exit)
+    if: always()
+    needs:
+      - python-format
+      - python-lint
+      - docker-lint
+      - shell-script-lint
+      - yaml-lint
+      - action-lint
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    env:
+      checks-ok: >-
+        ${{!contains(needs.*.result, 'failure')
+          && !contains(needs.*.result, 'cancelled')}}
     outputs:
-      changed: ${{steps.changes.outputs.any_changed == 'true' || inputs.debug}}
+      proceed: ${{env.checks-ok || inputs.debug}}
     steps:
-      - name: Check out a copy of the git repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          fetch-depth: 0
-
-      - name: Check if code files are among the files changed
-        id: changes
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        with:
-          base_sha: ${{inputs.base_sha}}
-          exclude_submodules: true
-          # Invert the test: exclude what's not considered a "code change".
-          files_ignore: |
-            .github/ISSUE_TEMPLATE/**
-            .github/dependabot.yaml
-            .github/problem-matchers/**
-            CITATION.cff
-            docs/**
-            eigen/**
-            tests/googletest/**
-            **/*.md
-            **/*.png
-
-      - name: Print the list of files changed
-        if: inputs.debug
+      # Stop the entire workflow with an error, unless we're in debugging mode.
+      - if: ${{env.checks-ok == 'false' && inputs.debug != 'true'}}
         run: |
-          echo "::group::List of files changed"
-          echo "${{steps.changes.outputs.all_changed_files}}"
-          echo "::endgroup::"
+          {
+          echo -n ":x: Basic checks failed; skipping longer tests. "
+          echo "Please correct the problems found so far."
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
 
   library-tests:
-    if: needs.code-changes.outputs.changed == 'true'
     name: Library tests on ${{matrix.os}} + Py ${{matrix.python_version}}
-    needs: code-changes
+    needs: continue-testing
     runs-on: ${{matrix.os}}
-    continue-on-error: true
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -355,14 +343,14 @@ jobs:
 
       - name: Run Python tests
         shell: bash
-        run: make -j run-py-tests
+        run: |
+          echo '::add-matcher::.github/problem-matchers/pytest.json'
+          make -j run-py-tests
 
   hardware-options-tests:
-    if: needs.code-changes.outputs.changed == 'true'
-    name: Hardware option checks
-    needs: code-changes
+    name: Hardware options tests
+    needs: continue-testing
     runs-on: ubuntu-24.04
-    continue-on-error: true
     timeout-minutes: 60
     strategy:
       matrix:
@@ -410,9 +398,8 @@ jobs:
               apps:qsim_base -- -c circuits/circuit_q24
 
   memory-addressing-tests:
-    if: needs.code-changes.outputs.changed == 'true'
-    name: Malloc/asan/msan checks
-    needs: code-changes
+    name: Malloc/asan/msan tests
+    needs: continue-testing
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
@@ -461,9 +448,8 @@ jobs:
         run: bazel test --config=asan ${{env.common_args}}
 
   docker-tests:
-    if: needs.code-changes.outputs.changed == 'true'
-    name: Docker build checks
-    needs: code-changes
+    name: Docker build tests
+    needs: continue-testing
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
