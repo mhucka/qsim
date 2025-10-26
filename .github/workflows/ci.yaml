@@ -327,6 +327,10 @@ jobs:
           version: "19.1.7"
           env: true
 
+      - name: Install Xcode CLI tools on macOS
+        if: startsWith(matrix.os, 'macos')
+        run: xcode-select --install
+
       - name: Install OpenMP on macOS
         if: startsWith(matrix.os, 'macos')
         run: |
