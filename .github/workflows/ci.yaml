@@ -273,6 +273,7 @@ jobs:
     steps:
       # Stop the entire workflow with an error, unless we're in debugging mode.
       - if: ${{env.checks-ok == 'false' && inputs.debug != 'true'}}
+        name: Print error message to workflow summary
         run: |
           {
           echo -n ":x: Basic checks failed; skipping longer tests. "
