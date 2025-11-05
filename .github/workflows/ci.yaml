@@ -66,7 +66,7 @@ permissions: read-all
 jobs:
   python-format:
     name: Python format checks
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     timeout-minutes: 15
     steps:
       - name: Check out a copy of the git repository
@@ -104,51 +104,47 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/black.json'
           check/format-incremental
 
-  # TODO(mhucka): after PR #911 is merged, uncomment this to enable pylint
-  # checks and also add python-lint to jobs that have "needs".
-  #
-  # python-lint:
-  #   name: Python lint checks
-  #   needs: [python-format]
-  #   runs-on: ubuntu-24.04
-  #   timeout-minutes: 15
-  #   steps:
-  #     - name: Check out a copy of the git repository
-  #       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-  #       with:
-  #         fetch-depth: 0
+  python-lint:
+    name: Python lint checks
+    needs: [python-format]
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    steps:
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          fetch-depth: 0
 
-  #     - name: Get a list of changed Python files
-  #       id: changes
-  #       uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-  #       with:
-  #         base_sha: ${{inputs.base_sha}}
-  #         files: '**/*.py'
+      - name: Get a list of changed Python files
+        id: changes
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+        with:
+          base_sha: ${{inputs.base_sha}}
+          files: '**/*.py'
 
-  #     - name: Set up Python
-  #       if: steps.changes.outputs.any_changed == 'true'
-  #       uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v5
-  #       with:
-  #         python-version: ${{env.python-version}}
-  #         cache: pip
-  #         cache-dependency-path: |
-  #           requirements.txt
-  #           dev-requirements.txt
+      - name: Set up Python
+        if: steps.changes.outputs.any_changed == 'true'
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v5
+        with:
+          python-version: ${{env.python-version}}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            dev-requirements.txt
 
-  #     - name: Install dependencies
-  #       if: steps.changes.outputs.any_changed == 'true'
-  #       run: pip install pylint~=3.3.1
+      - name: Install dependencies
+        if: steps.changes.outputs.any_changed == 'true'
+        run: pip install pylint~=3.3.1
 
-  #     - name: Lint the changed Python files
-  #       if: steps.changes.outputs.any_changed == 'true'
-  #       run: |
-  #         echo '::add-matcher::.github/problem-matchers/pylint.json'
-  #         pylint -j 0 -v ${{steps.changes.outputs.all_changed_files}}
+      - name: Lint the changed Python files
+        if: steps.changes.outputs.any_changed == 'true'
+        run: |
+          echo '::add-matcher::.github/problem-matchers/pylint.json'
+          pylint -j 0 -v ${{steps.changes.outputs.all_changed_files}}
 
   docker-lint:
     name: Dockerfile checks
-    # This uses a Mac runner because hadolint isn't available via Linux apt.
-    runs-on: macos-15
+    runs-on: ubuntu-slim
     timeout-minutes: 15
     steps:
       - name: Check out a copy of the git repository
@@ -162,22 +158,17 @@ jobs:
         with:
           files: '**/Dockerfile'
 
-      # Note: there is a hadolint GitHub Actions available, but it only accepts
-      # one Dockerfile to check. We have > 1 file to check, so we need the CLI.
-      - name: Install hadolint
+      - name: Run Hadolint
         if: steps.changes.outputs.any_changed == 'true'
-        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install hadolint
-
-      - name: Run hadolint on Dockerfiles that have been changed
-        if: steps.changes.outputs.any_changed == 'true'
-        run: |
-          echo '::add-matcher::.github/problem-matchers/hadolint.json'
-          hadolint --version
-          hadolint ${{steps.changes.outputs.all_changed_files}}
+        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
+        with:
+          failure-threshold: error
+          recursive: true
+          format: checkstyle
 
   shell-script-lint:
     name: Shell script checks
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     timeout-minutes: 15
     steps:
       - name: Check out a copy of the git repository
@@ -203,7 +194,7 @@ jobs:
 
   yaml-lint:
     name: YAML file checks
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     timeout-minutes: 15
     steps:
       - name: Check out a copy of the git repository
@@ -227,9 +218,41 @@ jobs:
           yamllint --version
           yamllint -f github ${{steps.changes.outputs.all_changed_files}}
 
+  bazel-lint:
+    name: Bazel file checks
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    steps:
+      - name: Check out a copy of the git repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          fetch-depth: 0
+
+      - name: Determine if Bazel files were changed
+        id: changes
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+        with:
+          base_sha: ${{inputs.base_sha}}
+          files: |
+            **/BUILD
+            **/*.bzl
+            WORKSPACE
+
+      - name: Install buildifier
+        uses: jbajic/setup-buildifier@c558ee05c6f74ab5753ff794516750b4aadac296 # v1
+        with:
+          buildifier-version: '8.2.1'
+
+      - name: Run Buildifier in lint mode on changed files
+        if: steps.changes.outputs.any_changed == 'true'
+        run: |
+          echo '::add-matcher::.github/problem-matchers/buildifier.json'
+          buildifier --version
+          buildifier -mode=diff -lint=warn ${{steps.changes.outputs.all_changed_files}}
+
   action-lint:
     name: Workflow file checks
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     timeout-minutes: 15
     steps:
       - name: Check out a copy of the git repository
@@ -253,11 +276,13 @@ jobs:
           pyflakes: false
 
   library-tests:
-    name: Library tests on ${{matrix.os}} + Py ${{matrix.python_version}}
+    name: Library tests
     needs:
       - action-lint
+      - bazel-lint
       - docker-lint
       - python-format
+      - python-lint
       - shell-script-lint
       - yaml-lint
     runs-on: ${{matrix.os}}
@@ -353,8 +378,8 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/pytest.json'
           make -j run-py-tests
 
-  hardware-options-tests:
-    name: Hardware options tests
+  options-tests:
+    name: Options tests
     needs:
       - action-lint
       - docker-lint
