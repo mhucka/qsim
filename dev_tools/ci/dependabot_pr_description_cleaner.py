@@ -30,8 +30,7 @@ def process_text(content):
     * Remove the section "Dependabot commands and options"
     """
 
-    # Pattern: match the start of the details block for Commits, lazy match
-    # until the closing details tag, and match the following br tag if present.
+    # Remove Commits block before conversion because it's easier to find.
     content = re.sub(
         r"<details>\s*<summary>Commits</summary>.*?</details>\s*(<br\s*/?>)?",
         "",
@@ -39,24 +38,24 @@ def process_text(content):
         flags=re.DOTALL | re.IGNORECASE,
     )
 
-    h = html2text.HTML2Text()
-    h.body_width = 0
-    markdown_content = h.handle(content)
+    html_converter = html2text.HTML2Text()
+    html_converter.body_width = 0
+    markdown_content = html_converter.handle(content)
 
+    # Split body on the heading that starts the list of Dependabot commands.
     target_phrase = "Dependabot commands and options"
-    if target_phrase in markdown_content:
-        # Split at the last occurrence of the phrase.
-        parts = markdown_content.rsplit(target_phrase, 1)
-        pre_text = parts[0]
-        pre_text = pre_text.rstrip()
-        # Remove the marker if present at the end.
-        if pre_text.endswith(r"\---"):
-            pre_text = pre_text[:-4]
-        elif pre_text.endswith("---"):
-            pre_text = pre_text[:-3]
-        markdown_content = pre_text.strip()
+    parts = markdown_content.rsplit(target_phrase, 1)
+    markdown_content = parts[0].strip()
 
-    return markdown_content
+    # Remove this common text too.
+    markdown_content = re.sub(
+        r'Dependabot will resolve any conflicts with this PR as long as.*',
+        '',
+        markdown_content,
+        flags=re.DOTALL | re.IGNORECASE
+    )
+
+    return markdown_content.strip()
 
 
 def clean_body(file_path):

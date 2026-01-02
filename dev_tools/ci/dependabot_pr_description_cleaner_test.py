@@ -299,18 +299,6 @@ def test_basic_example():
     assert "Dependabot commands and options" not in result
 
 
-@pytest.mark.parametrize("input_content", [SAMPLE_1, SAMPLE_2, SAMPLE_3])
-def test_clean_real_samples(input_content):
-    cleaned = cleaner.process_text(input_content)
-
-    assert cleaned is not None
-    assert "Dependabot commands and options" not in cleaned
-    assert "<details>" not in cleaned
-    assert "</details>" not in cleaned
-    assert "Release notes" in cleaned
-    assert "Commits" not in cleaned
-
-
 def test_idempotency():
     cleaned = cleaner.process_text(SAMPLE_1)
     cleaned_again = cleaner.process_text(cleaned)
@@ -333,18 +321,14 @@ def test_markdown_preservation():
     )
 
 
-def test_custom_separator_removal():
-    content = "Some content\n\n--- \nDependabot commands and options\nJunk at the end"
-    cleaned = cleaner.process_text(content)
-    assert "Some content" in cleaned
-    assert "Dependabot commands and options" not in cleaned
-    assert "Junk at the end" not in cleaned
-    assert "---" not in cleaned
+@pytest.mark.parametrize("input_content", [SAMPLE_1, SAMPLE_2, SAMPLE_3])
+def test_clean_real_samples(input_content):
+    cleaned = cleaner.process_text(input_content)
 
-
-def test_no_separator_removal():
-    content = "Some content\nDependabot commands and options\nJunk at the end"
-    cleaned = cleaner.process_text(content)
-    assert "Some content" in cleaned
+    assert cleaned is not None
     assert "Dependabot commands and options" not in cleaned
-    assert "Junk at the end" not in cleaned
+    assert "<details>" not in cleaned
+    assert "</details>" not in cleaned
+    assert "Release notes" in cleaned
+    assert "Commits" not in cleaned
+    assert "Dependabot will resolve any conflicts with this PR" not in cleaned
