@@ -18,7 +18,7 @@ run-name: >-
   ${{github.ref_name}} by @${{github.actor}}
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - synchronize
@@ -40,8 +40,9 @@ permissions: read-all
 jobs:
   clean-pr-description:
     if: >-
-      ${{github.actor == 'dependabot[bot]' &&
-        github.repository_owner == 'quantumlib'}}
+      ${{github.event_name == 'workflow_dispatch' ||
+        (github.event.pull_request.user.login == 'dependabot[bot]' &&
+          github.repository_owner == 'quantumlib')}}
     name: Clean PR description
     runs-on: ubuntu-slim
     timeout-minutes: 5
