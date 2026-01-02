@@ -30,9 +30,15 @@ def process_text(content):
     * Remove the section "Dependabot commands and options"
     """
 
-    # Remove Commits block before conversion because it's easier to find.
+    # Remove Commits & Changelog 1st because they're easier to find in HTML.
     content = re.sub(
         r"<details>\s*<summary>Commits</summary>.*?</details>\s*(<br\s*/?>)?",
+        "",
+        content,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    content = re.sub(
+        r"<details>\s*<summary>Changelog</summary>.*?</details>\s*(<br\s*/?>)?",
         "",
         content,
         flags=re.DOTALL | re.IGNORECASE,
@@ -49,10 +55,10 @@ def process_text(content):
 
     # Remove this common text too.
     markdown_content = re.sub(
-        r'Dependabot will resolve any conflicts with this PR as long as.*',
-        '',
+        r"Dependabot will resolve any conflicts with this PR as long as.*",
+        "",
         markdown_content,
-        flags=re.DOTALL | re.IGNORECASE
+        flags=re.DOTALL | re.IGNORECASE,
     )
 
     return markdown_content.strip()
