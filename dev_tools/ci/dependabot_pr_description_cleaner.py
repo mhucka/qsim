@@ -48,20 +48,23 @@ def process_text(content):
     html_converter.body_width = 0
     markdown_content = html_converter.handle(content)
 
-    # Split body on the heading that starts the list of Dependabot commands.
-    target_phrase = "Dependabot commands and options"
-    parts = markdown_content.rsplit(target_phrase, 1)
-    markdown_content = parts[0].strip()
-
-    # Remove this common text too.
+    # Remove the compatibility score and everything below it. If it's present,
+    # this will remove everything we don't care about, and we'll be done.
     markdown_content = re.sub(
-        r"Dependabot will resolve any conflicts with this PR as long as.*",
+        r"[![Dependabot compatibility score].*",
         "",
         markdown_content,
         flags=re.DOTALL | re.IGNORECASE,
     )
 
-    return markdown_content.strip()
+    # Not all Dependabot PRs have a score badge. As a backup, look for the
+    # paragraph after the badge, and remove that and everything below it.
+
+    target_phrase = "Dependabot will resolve any conflicts with this PR"
+    parts = markdown_content.rsplit(target_phrase, 1)
+    markdown_content = parts[0].strip()
+
+    return markdown_content
 
 
 def clean_body(file_path):
