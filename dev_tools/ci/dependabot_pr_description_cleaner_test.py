@@ -17,7 +17,6 @@
 import dependabot_pr_description_cleaner as cleaner
 import pytest
 
-# Sample 1
 SAMPLE_1 = r"""Bumps [raven-actions/actionlint](https://github.com/raven-actions/actionlint) from 2.0.1 to 2.1.0.
 <details>
 <summary>Release notes</summary>
@@ -101,7 +100,6 @@ You can trigger Dependabot actions by commenting on this PR:
 </details>
 """
 
-# Sample 2
 SAMPLE_2 = r"""Bumps [actions/checkout](https://github.com/actions/checkout) from 6.0.0 to 6.0.1.
 <details>
 <summary>Release notes</summary>
@@ -159,7 +157,6 @@ You can trigger Dependabot actions by commenting on this PR:
 </details>
 """
 
-# Sample 3
 SAMPLE_3 = r"""Updates the requirements on [cmake](https://github.com/scikit-build/cmake-python-distributions) to permit the latest version.
 <details>
 <summary>Release notes</summary>
@@ -195,6 +192,169 @@ SAMPLE_3 = r"""Updates the requirements on [cmake](https://github.com/scikit-bui
 <li><a href="https://github.com/scikit-build/cmake-python-distributions/commit/c89cf393ba25a148cc04c57a1e1ccb965fa1cabf"><code>c89cf39</code></a> chore: monthly updates (<a href="https://redirect.github.com/scikit-build/cmake-python-distributions/issues/660">#660</a>)</li>
 <li><a href="https://github.com/scikit-build/cmake-python-distributions/commit/597f1588a98dd58627940cc9f415c15f94b1d175"><code>597f158</code></a> chore: add changelog exclusion for bots (<a href="https://redirect.github.com/scikit-build/cmake-python-distributions/issues/658">#658</a>)</li>
 <li>Additional commits viewable in <a href="https://github.com/scikit-build/cmake-python-distributions/compare/3.28.1...4.2.1">compare view</a></li>
+</ul>
+</details>
+<br />
+
+
+Dependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+<details>
+<summary>Dependabot commands and options</summary>
+<br />
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating it. You can achieve the same result by closing it manually
+- `@dependabot show <dependency name> ignore conditions` will show all of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)
+
+
+</details>
+"""
+
+SAMPLE_4 = r"""
+Updates the requirements on [black](https://github.com/psf/black) to permit the latest version.
+<details>
+<summary>Release notes</summary>
+<p><em>Sourced from <a href="https://github.com/psf/black/releases">black's releases</a>.</em></p>
+<blockquote>
+<h2>25.11.0</h2>
+<h3>Highlights</h3>
+<ul>
+<li>Enable base 3.14 support (<a href="https://redirect.github.com/psf/black/issues/4804">#4804</a>)</li>
+<li>Add support for the new Python 3.14 t-string syntax introduced by PEP 750 (<a href="https://redirect.github.com/psf/black/issues/4805">#4805</a>)</li>
+</ul>
+<h3>Stable style</h3>
+<ul>
+<li>Fix bug where comments between <code># fmt: off</code> and <code># fmt: on</code> were reformatted (<a href="https://redirect.github.com/psf/black/issues/4811">#4811</a>)</li>
+<li>Comments containing fmt directives now preserve their exact formatting instead of
+being normalized (<a href="https://redirect.github.com/psf/black/issues/4811">#4811</a>)</li>
+</ul>
+<h3>Preview style</h3>
+<ul>
+<li>Move <code>multiline_string_handling</code> from <code>--unstable</code> to <code>--preview</code> (<a href="https://redirect.github.com/psf/black/issues/4760">#4760</a>)</li>
+<li>Fix bug where module docstrings would be treated as normal strings if preceded by
+comments (<a href="https://redirect.github.com/psf/black/issues/4764">#4764</a>)</li>
+<li>Fix bug where python 3.12 generics syntax split line happens weirdly (<a href="https://redirect.github.com/psf/black/issues/4777">#4777</a>)</li>
+<li>Standardize type comments to form <code># type: &lt;value&gt;</code> (<a href="https://redirect.github.com/psf/black/issues/4645">#4645</a>)</li>
+<li>Fix <code>fix_fmt_skip_in_one_liners</code> preview feature to respect <code># fmt: skip</code> for compound
+statements with semicolon-separated bodies (<a href="https://redirect.github.com/psf/black/issues/4800">#4800</a>)</li>
+</ul>
+<h3>Configuration</h3>
+<ul>
+<li>Add <code>no_cache</code> option to control caching behavior. (<a href="https://redirect.github.com/psf/black/issues/4803">#4803</a>)</li>
+</ul>
+<h3>Packaging</h3>
+<ul>
+<li>Releases now include arm64 Linux binaries (<a href="https://redirect.github.com/psf/black/issues/4773">#4773</a>)</li>
+</ul>
+<h3>Output</h3>
+<ul>
+<li>Write unchanged content to stdout when excluding formatting from stdin using pipes
+(<a href="https://redirect.github.com/psf/black/issues/4610">#4610</a>)</li>
+</ul>
+<h3><em>Blackd</em></h3>
+<ul>
+<li>Implemented BlackDClient. This simple python client allows to easily send formatting
+requests to blackd (<a href="https://redirect.github.com/psf/black/issues/4774">#4774</a>)</li>
+</ul>
+<h3>Integrations</h3>
+<ul>
+<li>Enable 3.14 base CI (<a href="https://redirect.github.com/psf/black/issues/4804">#4804</a>)</li>
+<li>Enhance GitHub Action <code>psf/black</code> to support the <code>required-version</code> major-version-only
+&quot;stability&quot; format when using pyproject.toml (<a href="https://redirect.github.com/psf/black/issues/4770">#4770</a>)</li>
+<li>Improve error message for vim plugin users. It now handles independently vim version</li>
+<li>Vim: Warn on unsupported Vim and Python versions independently (<a href="https://redirect.github.com/psf/black/issues/4772">#4772</a>)</li>
+<li>Vim: Print the import paths when importing black fails (<a href="https://redirect.github.com/psf/black/issues/4675">#4675</a>)</li>
+<li>Vim: Fix handling of virtualenvs that have a different Python version (<a href="https://redirect.github.com/psf/black/issues/4675">#4675</a>)</li>
+</ul>
+</blockquote>
+</details>
+<details>
+<summary>Changelog</summary>
+<p><em>Sourced from <a href="https://github.com/psf/black/blob/main/CHANGES.md">black's changelog</a>.</em></p>
+<blockquote>
+<h2>25.11.0</h2>
+<h3>Highlights</h3>
+<ul>
+<li>Enable base 3.14 support (<a href="https://redirect.github.com/psf/black/issues/4804">#4804</a>)</li>
+<li>Add support for the new Python 3.14 t-string syntax introduced by PEP 750 (<a href="https://redirect.github.com/psf/black/issues/4805">#4805</a>)</li>
+</ul>
+<h3>Stable style</h3>
+<ul>
+<li>Fix bug where comments between <code># fmt: off</code> and <code># fmt: on</code> were reformatted (<a href="https://redirect.github.com/psf/black/issues/4811">#4811</a>)</li>
+<li>Comments containing fmt directives now preserve their exact formatting instead of
+being normalized (<a href="https://redirect.github.com/psf/black/issues/4811">#4811</a>)</li>
+</ul>
+<h3>Preview style</h3>
+<ul>
+<li>Move <code>multiline_string_handling</code> from <code>--unstable</code> to <code>--preview</code> (<a href="https://redirect.github.com/psf/black/issues/4760">#4760</a>)</li>
+<li>Fix bug where module docstrings would be treated as normal strings if preceded by
+comments (<a href="https://redirect.github.com/psf/black/issues/4764">#4764</a>)</li>
+<li>Fix bug where python 3.12 generics syntax split line happens weirdly (<a href="https://redirect.github.com/psf/black/issues/4777">#4777</a>)</li>
+<li>Standardize type comments to form <code># type: &lt;value&gt;</code> (<a href="https://redirect.github.com/psf/black/issues/4645">#4645</a>)</li>
+<li>Fix <code>fix_fmt_skip_in_one_liners</code> preview feature to respect <code># fmt: skip</code> for compound
+statements with semicolon-separated bodies (<a href="https://redirect.github.com/psf/black/issues/4800">#4800</a>)</li>
+</ul>
+<h3>Configuration</h3>
+<ul>
+<li>Add <code>no_cache</code> option to control caching behavior. (<a href="https://redirect.github.com/psf/black/issues/4803">#4803</a>)</li>
+</ul>
+<h3>Packaging</h3>
+<ul>
+<li>Releases now include arm64 Linux binaries (<a href="https://redirect.github.com/psf/black/issues/4773">#4773</a>)</li>
+<li>Releases now include arm64 Windows binaries and wheels (<a href="https://redirect.github.com/psf/black/issues/4814">#4814</a>)</li>
+</ul>
+<h3>Output</h3>
+<ul>
+<li>Write unchanged content to stdout when excluding formatting from stdin using pipes
+(<a href="https://redirect.github.com/psf/black/issues/4610">#4610</a>)</li>
+</ul>
+<h3><em>Blackd</em></h3>
+<ul>
+<li>Implemented BlackDClient. This simple python client allows to easily send formatting
+requests to blackd (<a href="https://redirect.github.com/psf/black/issues/4774">#4774</a>)</li>
+</ul>
+<h3>Integrations</h3>
+<ul>
+<li>Enable 3.14 base CI (<a href="https://redirect.github.com/psf/black/issues/4804">#4804</a>)</li>
+<li>Enhance GitHub Action <code>psf/black</code> to support the <code>required-version</code> major-version-only
+&quot;stability&quot; format when using pyproject.toml (<a href="https://redirect.github.com/psf/black/issues/4770">#4770</a>)</li>
+<li>Add <code>output-file</code> input to GitHub Action <code>psf/black</code> to write formatter output to a
+file for artifact capture and log cleanliness (<a href="https://redirect.github.com/psf/black/issues/4824">#4824</a>)</li>
+<li>Improve error message for vim plugin users. It now handles independently vim version</li>
+</ul>
+<!-- raw HTML omitted -->
+</blockquote>
+<p>... (truncated)</p>
+</details>
+<details>
+<summary>Commits</summary>
+<ul>
+<li><a href="https://github.com/psf/black/commit/05f0a8ce1f71fbb36e1e032d3b518c7b945089a2"><code>05f0a8c</code></a> Prepare for 25.11.0 release (<a href="https://redirect.github.com/psf/black/issues/4825">#4825</a>)</li>
+<li><a href="https://github.com/psf/black/commit/ae17c61310e44401ca55d17a9c01db1dc03940a6"><code>ae17c61</code></a> Fix tests on pytest 9 (<a href="https://redirect.github.com/psf/black/issues/4835">#4835</a>)</li>
+<li><a href="https://github.com/psf/black/commit/138745eca650aa59ab30458f7b1c026b66608a09"><code>138745e</code></a> Include Windows and Python 3.14 in PR wheel build matrix, fix Windows build (...</li>
+<li><a href="https://github.com/psf/black/commit/18170d6d8d9bdde97d4cd3568cfa8be434a09ff3"><code>18170d6</code></a> ci: add label for running all builds on a pull request (<a href="https://redirect.github.com/psf/black/issues/4833">#4833</a>)</li>
+<li><a href="https://github.com/psf/black/commit/0e793e3d7e0d12dbda1573fa1bb785b1f066ee7c"><code>0e793e3</code></a> fix windows wheels (<a href="https://redirect.github.com/psf/black/issues/4830">#4830</a>)</li>
+<li><a href="https://github.com/psf/black/commit/b71f36c9fda07930c83e22681e0ec08ddf5a3980"><code>b71f36c</code></a> Use build[uv] as cibuildwheel frontend (<a href="https://redirect.github.com/psf/black/issues/4831">#4831</a>)</li>
+<li><a href="https://github.com/psf/black/commit/a7bd594493bb5cb703beee877a2df40556b0baaa"><code>a7bd594</code></a> Skip free threaded builds in cibuildwheel (<a href="https://redirect.github.com/psf/black/issues/4829">#4829</a>)</li>
+<li><a href="https://github.com/psf/black/commit/862dee91fa1259ca2bc00f10538b52a4959bdbe8"><code>862dee9</code></a> Update cibuildwheel (<a href="https://redirect.github.com/psf/black/issues/4828">#4828</a>)</li>
+<li><a href="https://github.com/psf/black/commit/b5f354c56627640e0b853af51a51d9262bafa9f0"><code>b5f354c</code></a> build: restrict to pytest 9.0 due to breakage in custom pytest_configure (<a href="https://redirect.github.com/psf/black/issues/4827">#4827</a>)</li>
+<li><a href="https://github.com/psf/black/commit/f705197f57149b79ed83cccf22e4fed19b48a7bf"><code>f705197</code></a> t-string support (<a href="https://redirect.github.com/psf/black/issues/4805">#4805</a>)</li>
+<li>Additional commits viewable in <a href="https://github.com/psf/black/compare/25.9.0...25.11.0">compare view</a></li>
 </ul>
 </details>
 <br />
@@ -321,7 +481,7 @@ def test_markdown_preservation():
     )
 
 
-@pytest.mark.parametrize("input_content", [SAMPLE_1, SAMPLE_2, SAMPLE_3])
+@pytest.mark.parametrize("input_content", [SAMPLE_1, SAMPLE_2, SAMPLE_3, SAMPLE_4])
 def test_clean_real_samples(input_content):
     cleaned = cleaner.process_text(input_content)
 
