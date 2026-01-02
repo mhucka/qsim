@@ -50,16 +50,12 @@ def process_text(content):
 
     # Remove the compatibility score and everything below it. If it's present,
     # this will remove everything we don't care about, and we'll be done.
-    markdown_content = re.sub(
-        r"[![Dependabot compatibility score].*",
-        "",
-        markdown_content,
-        flags=re.DOTALL | re.IGNORECASE,
-    )
+    target_phrase = "[![Dependabot compatibility score]"
+    parts = markdown_content.rsplit(target_phrase, 1)
+    markdown_content = parts[0].strip()
 
     # Not all Dependabot PRs have a score badge. As a backup, look for the
     # paragraph after the badge, and remove that and everything below it.
-
     target_phrase = "Dependabot will resolve any conflicts with this PR"
     parts = markdown_content.rsplit(target_phrase, 1)
     markdown_content = parts[0].strip()

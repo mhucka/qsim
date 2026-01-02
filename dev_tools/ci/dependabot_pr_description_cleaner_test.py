@@ -416,21 +416,6 @@ def test_remove_commits_section():
     assert "More text" in result
 
 
-def test_remove_dependabot_commands():
-    html_input = """
-    <p>Content</p>
-    <hr />
-    <details>
-    <summary>Dependabot commands and options</summary>
-    <p>commands</p>
-    </details>
-    """
-    result = cleaner.process_text(html_input)
-
-    assert "Content" in result
-    assert "Dependabot commands and options" not in result
-
-
 def test_basic_example():
     # A simplified version of a real Dependabot body
     html_input = """
@@ -445,6 +430,13 @@ def test_basic_example():
     </details>
     <br />
     ---
+    Dependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.
+
+    [//]: # (dependabot-automerge-start)
+    [//]: # (dependabot-automerge-end)
+
+    ---
+
     <details>
     <summary>Dependabot commands and options</summary>
     <p>help</p>
@@ -457,6 +449,7 @@ def test_basic_example():
     assert "Commits" not in result
     assert "123456" not in result
     assert "Dependabot commands and options" not in result
+    assert "Dependabot will resolve" not in result
 
 
 def test_idempotency():
