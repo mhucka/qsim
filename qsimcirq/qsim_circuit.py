@@ -32,6 +32,14 @@ GATE_PARAMS = [
 ]
 
 
+def _translate_IdentityGate(gate: cirq.IdentityGate):
+    if gate.num_qubits() == 1:
+        return qsim.kI1
+    if gate.num_qubits() == 2:
+        return qsim.kI2
+    return qsim.kI
+
+
 def _translate_ControlledGate(gate: cirq.ControlledGate):
     return _cirq_gate_kind(gate.sub_gate)
 
@@ -167,6 +175,7 @@ def _translate_MeasurementGate(gate: cirq.MeasurementGate):
 
 
 TYPE_TRANSLATOR = {
+    cirq.IdentityGate: _translate_IdentityGate,
     cirq.ControlledGate: _translate_ControlledGate,
     cirq.XPowGate: _translate_XPowGate,
     cirq.YPowGate: _translate_YPowGate,

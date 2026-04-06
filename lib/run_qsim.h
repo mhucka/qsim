@@ -60,7 +60,11 @@ struct QSimRunner final {
   template <typename Circuit, typename MeasurementFunc>
   static bool Run(const Parameter& param, const Factory& factory,
                   const Circuit& circuit, MeasurementFunc measure) {
-    return Run(param, factory, {circuit.gates.back().time}, circuit, measure);
+    unsigned final_time = 0;
+    if (circuit.gates.size() > 0) {
+      final_time = circuit.gates.back().time;
+    }
+    return Run(param, factory, {final_time}, circuit, measure);
   }
 
   /**
