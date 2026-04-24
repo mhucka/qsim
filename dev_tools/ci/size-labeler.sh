@@ -39,14 +39,6 @@ declare -A LIMITS=(
     ["${LABELS[4]}"]="$((2 ** 63 - 1))"
 )
 
-declare -ar IGNORED=(
-    "*_pb2.py"
-    "*_pb2.pyi"
-    "*_pb2_grpc.py"
-    ".*.lock"
-    "*.bundle.js"
-)
-
 function info() {
     echo >&2 "INFO: ${*}"
 }
@@ -111,30 +103,19 @@ function api_call() {
 function compute_changes() {
     local -r pr="$1"
     local page=1
-    local total_changes=0
+    local changes=0
     while true; do
         local response
         response="$(api_call "pulls/${pr}/files?per_page=100&page=${page}")"
 
-        if [[ "$(jq_stdin '. | length' <<<"${response}")" -eq 0 ]]; then
+        if [[ "$(jq_stdin 'length' <<<"${response}")" -eq 0 ]]; then
             break
         fi
 
-        local name changes
-        while IFS= read -r name && IFS= read -r changes; do
-            for pattern in "${IGNORED[@]}"; do
-                # shellcheck disable=SC2053  # Need leave the pattern unquoted.
-                if [[ "${name}" == ${pattern} ]]; then
-                    info "File ${name} ignored"
-                    continue 2
-                fi
-            done
-            info "File ${name} +-${changes}"
-            total_changes="$((total_changes + changes))"
-        done < <(jq_stdin -r '.[] | .filename, .changes' <<<"${response}")
+        changes=$((changes + $(jq_stdin '[0, .[].changes] | add' <<<"${response}")))
         ((page++))
     done
-    echo "${total_changes}"
+    echo "${changes}"
 }
 
 function get_size_label() {
