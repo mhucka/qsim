@@ -14,3 +14,37 @@
 
 # Ignore this in case the user previously did a "pip install -e ."
 qsimcirq.egg-info
+
+# Additional generic things to ignore.
+**/*.bak
+**/*.DS_Store
+**/*.log
+**/*.py,cover
+**/*.pyc
+**/*.swp
+**/*.tmp
+**/*.whl
+**/.*_cache/
+**/.git/
+**/.ipynb_checkpoints/
+**/__pycache__/
+*.cover
+*.coverage
+*.coverage.*
+*.egg
+*.egg-info/
+*~
+.coverage
+.dockerignore
+.env*
+.github/
+.idea/
+.venv/
+.vscode/
+bazel-*
+build/
+coverage.xml
+dist/
+env/
+jupyter_kernel.lock
+venv/
