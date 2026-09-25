@@ -138,7 +138,8 @@ test-command = "pytest --import-mode=importlib -n auto -s -v {package}/qsimcirq_
 manylinux-x86_64-image = "manylinux2014"
 
 [[tool.cibuildwheel.overrides]]
-# For Python 3.14, have to use a more recent manylinux image.
+# NumPy and SciPy publish cp314 wheels only for manylinux_2_28, so tests can't
+# install them on manylinux2014.
 select = ["cp314*"]
 inherit.environment = "append"
 manylinux-x86_64-image = "manylinux_2_28"
