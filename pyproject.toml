@@ -136,7 +136,6 @@ test-command = "pytest --import-mode=importlib -n auto -s -v {package}/qsimcirq_
 
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux2014"
-manylinux-i686-image = "manylinux2014"
 
 [[tool.cibuildwheel.overrides]]
 # For Python 3.14, have to use a more recent manylinux image.
